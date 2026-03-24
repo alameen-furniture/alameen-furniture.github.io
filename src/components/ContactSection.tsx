@@ -1,0 +1,60 @@
+import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { Phone, Mail, MapPin } from "lucide-react";
+
+const ContactSection = () => {
+  const ref = useScrollAnimation();
+
+  return (
+    <section id="contact" className="py-24 px-6" ref={ref}>
+      <div className="max-w-6xl mx-auto">
+        <div className="text-center mb-16 animate-scroll-fade">
+          <p className="text-primary uppercase tracking-[0.3em] text-sm mb-4">Get in Touch</p>
+          <h2 className="font-serif text-3xl sm:text-5xl font-bold text-foreground">
+            Visit Our <span className="text-primary italic">Workshop</span>
+          </h2>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-12">
+          <div className="animate-scroll-fade space-y-8">
+            {[
+              { icon: Phone, label: "Phone", value: "+91 89107 24040", href: "tel:+918910724040" },
+              { icon: Mail, label: "Email", value: "akbarkhan891071@gmail.com", href: "mailto:akbarkhan891071@gmail.com" },
+              { icon: MapPin, label: "Address", value: "36, 4/3, Behari Mondal Rd, Shanti Pally, Ramlal Bazar, Haltu, Kolkata, West Bengal 700078", href: "https://maps.google.com/?q=36,+4/3,+Behari+Mondal+Rd,+Haltu,+Kolkata+700078" },
+            ].map((item) => (
+              <a
+                key={item.label}
+                href={item.href}
+                target={item.label === "Address" ? "_blank" : undefined}
+                rel={item.label === "Address" ? "noopener noreferrer" : undefined}
+                className="flex gap-5 group"
+              >
+                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                  <item.icon className="w-5 h-5 text-primary" />
+                </div>
+                <div>
+                  <p className="text-sm text-muted-foreground mb-1">{item.label}</p>
+                  <p className="text-foreground group-hover:text-primary transition-colors">{item.value}</p>
+                </div>
+              </a>
+            ))}
+          </div>
+
+          <div className="animate-scroll-fade rounded-xl overflow-hidden border border-border" style={{ transitionDelay: "200ms" }}>
+            <iframe
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3685.5!2d88.3637!3d22.5014!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjLCsDMwJzA1LjAiTiA4OMKwMjEnNDkuMyJF!5e0!3m2!1sen!2sin!4v1700000000000"
+              width="100%"
+              height="400"
+              style={{ border: 0, filter: "invert(90%) hue-rotate(180deg)" }}
+              allowFullScreen
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              title="Al Ameen Furniture Location"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default ContactSection;
