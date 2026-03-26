@@ -106,3 +106,12 @@
   0%, 100% { box-shadow: 0 0 15px hsl(38 45% 60% / 0.4); }
   50% { box-shadow: 0 0 30px hsl(38 45% 60% / 0.7), 0 0 60px hsl(38 45% 60% / 0.3); }
 }
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.6s ease-out forwards;
+}
