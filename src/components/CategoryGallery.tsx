@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { useState, useRef, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ArrowLeft } from "lucide-react";
 
