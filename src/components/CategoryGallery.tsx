@@ -1,5 +1,4 @@
-import { useState } from "react";
-import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { useState, useRef, useEffect } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { ArrowLeft } from "lucide-react";
 
@@ -83,10 +82,38 @@ const categories: Category[] = [
 const CategoryGallery = () => {
   const [activeCategory, setActiveCategory] = useState<Category | null>(null);
   const [lightbox, setLightbox] = useState<PortfolioItem | null>(null);
-  const ref = useScrollAnimation();
+  const sectionRef = useRef<HTMLElement>(null);
+
+  // Re-trigger scroll animations when view changes
+  useEffect(() => {
+    const el = sectionRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+          }
+        });
+      },
+      { threshold: 0.05, rootMargin: "0px 0px 0px 0px" }
+    );
+
+    // Small delay to ensure DOM has updated
+    const timer = setTimeout(() => {
+      const children = el.querySelectorAll(".animate-scroll-fade");
+      children.forEach((child) => observer.observe(child));
+    }, 50);
+
+    return () => {
+      clearTimeout(timer);
+      observer.disconnect();
+    };
+  }, [activeCategory]);
 
   return (
-    <section id="portfolio" className="py-24 px-6" ref={ref}>
+    <section id="portfolio" className="py-24 px-6" ref={sectionRef}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16 animate-scroll-fade">
           <p className="text-primary uppercase tracking-[0.3em] text-sm mb-4 font-sans">
@@ -161,22 +188,23 @@ const CategoryGallery = () => {
             </div>
 
             {/* Masonry-style grid */}
-            <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {activeCategory.items.map((item, i) => (
                 <div
                   key={item.id}
-                  className="break-inside-avoid group relative rounded-lg overflow-hidden cursor-pointer border border-border/20 hover:border-primary/40 transition-all duration-500"
-                  style={{ animationDelay: `${i * 100}ms` }}
+                  className="group relative aspect-[3/4] rounded-lg overflow-hidden cursor-pointer border border-border/20 hover:border-primary/40 transition-all duration-500 animate-fade-in"
+                  style={{ animationDelay: `${i * 60}ms` }}
                   onClick={() => setLightbox(item)}
                 >
                   <img
                     src={item.image}
                     alt={item.title}
-                    className="w-full h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     loading="lazy"
+                    decoding="async"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-5">
-                    <p className="text-foreground font-serif text-lg font-semibold">
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+                    <p className="text-foreground font-serif text-sm sm:text-base font-semibold">
                       {item.title}
                     </p>
                   </div>
@@ -189,12 +217,16 @@ const CategoryGallery = () => {
 
       {/* Lightbox */}
       <Dialog open={!!lightbox} onOpenChange={() => setLightbox(null)}>
-        <DialogContent className="max-w-4xl bg-card border-border p-2">
+        <DialogContent className="max-w-[95vw] sm:max-w-3xl bg-transparent border-none p-0 shadow-none [&>button]:text-white [&>button]:bg-black/60 [&>button]:rounded-full [&>button]:p-1.5 [&>button]:top-2 [&>button]:right-2">
           {lightbox && (
-            <div>
-              <img src={lightbox.image} alt={lightbox.title} className="w-full rounded-lg" />
-              <div className="p-4">
-                <p className="text-foreground font-serif text-xl font-semibold">
+            <div className="flex flex-col items-center">
+              <img
+                src={lightbox.image}
+                alt={lightbox.title}
+                className="w-full max-h-[80vh] object-contain rounded-lg"
+              />
+              <div className="w-full bg-card/90 backdrop-blur-sm rounded-b-lg px-4 py-3 -mt-1">
+                <p className="text-foreground font-serif text-lg font-semibold">
                   {lightbox.title}
                 </p>
               </div>
