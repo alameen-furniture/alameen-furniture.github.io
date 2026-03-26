@@ -1,6 +1,6 @@
 import Navbar from "@/components/Navbar";
 import HeroSection from "@/components/HeroSection";
-import PortfolioGallery from "@/components/PortfolioGallery";
+import CategoryGallery from "@/components/CategoryGallery";
 import AboutSection from "@/components/AboutSection";
 import WhyChooseUs from "@/components/WhyChooseUs";
 import OrderForm from "@/components/OrderForm";
@@ -15,7 +15,7 @@ const Index = () => {
       <Navbar />
       <main>
         <HeroSection />
-        <PortfolioGallery />
+        <CategoryGallery />
         <AboutSection />
         <WhyChooseUs />
         <OrderForm />
