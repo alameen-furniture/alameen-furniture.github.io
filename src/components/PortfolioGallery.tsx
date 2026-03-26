@@ -2,17 +2,30 @@ import { useState } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 
-const categories = ["All", "Sofas", "Beds", "Wardrobes", "Custom Projects"] as const;
+import sofaChesterfield from "@/assets/portfolio/sofa-chesterfield.webp";
+import bedQuiltedLuxury from "@/assets/portfolio/bed-quilted-luxury.webp";
+import bedGoldenWardrobe from "@/assets/portfolio/bed-golden-wardrobe.webp";
+import bedElegantWhite from "@/assets/portfolio/bed-elegant-white.webp";
+import bedTuftedBeige from "@/assets/portfolio/bed-tufted-beige.webp";
+import bedBlackDiamond from "@/assets/portfolio/bed-black-diamond.webp";
+import bedGreyModern from "@/assets/portfolio/bed-grey-modern.webp";
+import bedTealLuxury from "@/assets/portfolio/bed-teal-luxury.webp";
+import bedClassicGrey from "@/assets/portfolio/bed-classic-grey.webp";
+import bedGoldTrim from "@/assets/portfolio/bed-gold-trim.webp";
+
+const categories = ["All", "Sofas", "Beds", "Custom Projects"] as const;
 
 const portfolioItems = [
-  { id: 1, category: "Sofas", title: "Royal Chesterfield Sofa", image: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=800&q=80" },
-  { id: 2, category: "Beds", title: "Elegant King Bed", image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=800&q=80" },
-  { id: 3, category: "Wardrobes", title: "Walk-in Wardrobe", image: "https://images.unsplash.com/photo-1558618666-fcd25c85f82e?w=800&q=80" },
-  { id: 4, category: "Sofas", title: "Modern L-Shape Sofa", image: "https://images.unsplash.com/photo-1493663284031-b7e3aefcae8e?w=800&q=80" },
-  { id: 5, category: "Custom Projects", title: "Custom TV Unit", image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=800&q=80" },
-  { id: 6, category: "Beds", title: "Platform Storage Bed", image: "https://images.unsplash.com/photo-1540518614846-7eded433c457?w=800&q=80" },
-  { id: 7, category: "Wardrobes", title: "Sliding Door Wardrobe", image: "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?w=800&q=80" },
-  { id: 8, category: "Custom Projects", title: "Complete Interior", image: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=800&q=80" },
+  { id: 1, category: "Sofas", title: "Royal Chesterfield Sofa", image: sofaChesterfield },
+  { id: 2, category: "Beds", title: "Quilted Luxury Bed", image: bedQuiltedLuxury },
+  { id: 3, category: "Custom Projects", title: "Golden Wardrobe & Bed Suite", image: bedGoldenWardrobe },
+  { id: 4, category: "Beds", title: "Elegant White Bedroom", image: bedElegantWhite },
+  { id: 5, category: "Beds", title: "Tufted Beige Bed", image: bedTuftedBeige },
+  { id: 6, category: "Beds", title: "Black Diamond Bed", image: bedBlackDiamond },
+  { id: 7, category: "Beds", title: "Grey Modern Bed", image: bedGreyModern },
+  { id: 8, category: "Beds", title: "Teal Luxury Bed", image: bedTealLuxury },
+  { id: 9, category: "Beds", title: "Classic Grey Bedroom", image: bedClassicGrey },
+  { id: 10, category: "Beds", title: "Gold Trim Bed", image: bedGoldTrim },
 ];
 
 const PortfolioGallery = () => {
@@ -30,10 +43,11 @@ const PortfolioGallery = () => {
           <h2 className="font-serif text-3xl sm:text-5xl font-bold text-foreground">
             Our <span className="text-primary italic">Finest</span> Creations
           </h2>
+          <div className="w-16 h-[1px] bg-primary mx-auto mt-6" />
         </div>
 
         {/* Category Tabs */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12 animate-scroll-fade">
+        <div className="flex flex-wrap justify-center gap-3 mb-14 animate-scroll-fade">
           {categories.map((cat) => (
             <button
               key={cat}
@@ -50,23 +64,23 @@ const PortfolioGallery = () => {
         </div>
 
         {/* Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {filtered.map((item, i) => (
             <div
               key={item.id}
-              className="animate-scroll-fade group relative aspect-[4/3] rounded-lg overflow-hidden cursor-pointer"
-              style={{ transitionDelay: `${i * 100}ms` }}
+              className="animate-scroll-fade group relative aspect-[4/3] rounded-lg overflow-hidden cursor-pointer border border-border/30 hover:border-primary/40 transition-all duration-500"
+              style={{ transitionDelay: `${i * 80}ms` }}
               onClick={() => setLightbox(item)}
             >
               <img
                 src={item.image}
                 alt={item.title}
-                className="w-full h-full object-cover img-zoom"
+                className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                 loading="lazy"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-5">
+              <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-5">
                 <div>
-                  <p className="text-primary text-xs uppercase tracking-widest">{item.category}</p>
+                  <p className="text-primary text-xs uppercase tracking-widest mb-1">{item.category}</p>
                   <p className="text-foreground font-serif text-lg font-semibold">{item.title}</p>
                 </div>
               </div>
@@ -81,7 +95,7 @@ const PortfolioGallery = () => {
           {lightbox && (
             <div>
               <img
-                src={lightbox.image.replace("w=800", "w=1400")}
+                src={lightbox.image}
                 alt={lightbox.title}
                 className="w-full rounded-lg"
               />
