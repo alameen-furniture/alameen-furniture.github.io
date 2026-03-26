@@ -1,5 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
+import { Star, Quote, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
 type Review = {
   id: string;
@@ -8,9 +9,10 @@ type Review = {
   text: string;
   date: string;
   source?: string;
+  profilePhoto?: string;
 };
 
-const placeholderReviews: Review[] = [
+const fallbackReviews: Review[] = [
   {
     id: "1",
     author: "Rajesh Kumar",
@@ -82,21 +84,26 @@ const ReviewCard = ({ review, index }: { review: Review; index: number }) => (
     style={{ animationDelay: `${index * 100}ms` }}
   >
     <div className="h-full bg-card border border-border/40 rounded-xl p-6 sm:p-8 flex flex-col gap-4 hover:border-primary/30 transition-colors duration-500">
-      {/* Quote icon */}
       <Quote className="w-8 h-8 text-primary/30" />
-
-      {/* Review text */}
       <p className="text-muted-foreground text-sm leading-relaxed flex-1 italic">
         "{review.text}"
       </p>
-
-      {/* Rating + Author */}
       <div className="pt-4 border-t border-border/30">
         <StarRating rating={review.rating} />
         <div className="flex items-center justify-between mt-3">
-          <div>
-            <p className="text-foreground font-semibold text-sm">{review.author}</p>
-            <p className="text-muted-foreground text-xs mt-0.5">{review.date}</p>
+          <div className="flex items-center gap-3">
+            {review.profilePhoto && (
+              <img
+                src={review.profilePhoto}
+                alt={review.author}
+                className="w-8 h-8 rounded-full object-cover"
+                referrerPolicy="no-referrer"
+              />
+            )}
+            <div>
+              <p className="text-foreground font-semibold text-sm">{review.author}</p>
+              <p className="text-muted-foreground text-xs mt-0.5">{review.date}</p>
+            </div>
           </div>
           {review.source && (
             <span className="text-xs text-muted-foreground/60 uppercase tracking-wider">
@@ -114,8 +121,34 @@ const TestimonialsSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [reviews, setReviews] = useState<Review[]>(fallbackReviews);
+  const [googleRating, setGoogleRating] = useState<number | null>(null);
+  const [totalReviews, setTotalReviews] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const reviews = placeholderReviews;
+  // Fetch Google reviews
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const { data, error } = await supabase.functions.invoke("google-reviews");
+        if (error) throw error;
+        if (data?.reviews?.length > 0) {
+          // Filter out reviews with no text
+          const validReviews = data.reviews.filter((r: Review) => r.text?.trim());
+          if (validReviews.length > 0) {
+            setReviews(validReviews);
+          }
+          if (data.rating) setGoogleRating(data.rating);
+          if (data.totalReviews) setTotalReviews(data.totalReviews);
+        }
+      } catch (err) {
+        console.log("Using fallback reviews:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchReviews();
+  }, []);
 
   const updateScrollButtons = () => {
     const el = scrollRef.current;
@@ -130,7 +163,7 @@ const TestimonialsSection = () => {
     el.addEventListener("scroll", updateScrollButtons, { passive: true });
     updateScrollButtons();
     return () => el.removeEventListener("scroll", updateScrollButtons);
-  }, []);
+  }, [reviews]);
 
   // Scroll animation observer
   useEffect(() => {
@@ -156,8 +189,8 @@ const TestimonialsSection = () => {
     el.scrollBy({ left: amount, behavior: "smooth" });
   };
 
-  // Average rating
-  const avgRating = (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length).toFixed(1);
+  const avgRating = googleRating || (reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.length);
+  const reviewCount = totalReviews || reviews.length;
 
   return (
     <section ref={sectionRef} className="py-24 overflow-hidden">
@@ -179,50 +212,59 @@ const TestimonialsSection = () => {
                 <Star key={s} className="w-4 h-4 fill-primary text-primary" />
               ))}
             </div>
-            <span className="text-foreground font-semibold">{avgRating}</span>
+            <span className="text-foreground font-semibold">
+              {typeof avgRating === "number" ? avgRating.toFixed(1) : avgRating}
+            </span>
             <span className="text-muted-foreground text-sm">
-              · {reviews.length} reviews
+              · {reviewCount} reviews on Google
             </span>
           </div>
         </div>
 
-        {/* Carousel */}
-        <div className="relative animate-scroll-fade">
-          {/* Navigation arrows — desktop only */}
-          <button
-            onClick={() => scroll("left")}
-            className={`hidden sm:flex absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full border border-border bg-card/80 backdrop-blur-sm transition-all duration-300 ${
-              canScrollLeft
-                ? "opacity-100 hover:border-primary hover:text-primary"
-                : "opacity-0 pointer-events-none"
-            }`}
-            aria-label="Previous reviews"
-          >
-            <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button
-            onClick={() => scroll("right")}
-            className={`hidden sm:flex absolute -right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full border border-border bg-card/80 backdrop-blur-sm transition-all duration-300 ${
-              canScrollRight
-                ? "opacity-100 hover:border-primary hover:text-primary"
-                : "opacity-0 pointer-events-none"
-            }`}
-            aria-label="Next reviews"
-          >
-            <ChevronRight className="w-5 h-5" />
-          </button>
-
-          {/* Scrollable container */}
-          <div
-            ref={scrollRef}
-            className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 -mx-6 px-6"
-            style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-          >
-            {reviews.map((review, i) => (
-              <ReviewCard key={review.id} review={review} index={i} />
-            ))}
+        {/* Loading state */}
+        {loading && (
+          <div className="flex justify-center py-12">
+            <Loader2 className="w-6 h-6 text-primary animate-spin" />
           </div>
-        </div>
+        )}
+
+        {/* Carousel */}
+        {!loading && (
+          <div className="relative animate-scroll-fade">
+            <button
+              onClick={() => scroll("left")}
+              className={`hidden sm:flex absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full border border-border bg-card/80 backdrop-blur-sm transition-all duration-300 ${
+                canScrollLeft
+                  ? "opacity-100 hover:border-primary hover:text-primary"
+                  : "opacity-0 pointer-events-none"
+              }`}
+              aria-label="Previous reviews"
+            >
+              <ChevronLeft className="w-5 h-5" />
+            </button>
+            <button
+              onClick={() => scroll("right")}
+              className={`hidden sm:flex absolute -right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full border border-border bg-card/80 backdrop-blur-sm transition-all duration-300 ${
+                canScrollRight
+                  ? "opacity-100 hover:border-primary hover:text-primary"
+                  : "opacity-0 pointer-events-none"
+              }`}
+              aria-label="Next reviews"
+            >
+              <ChevronRight className="w-5 h-5" />
+            </button>
+
+            <div
+              ref={scrollRef}
+              className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 -mx-6 px-6"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
+              {reviews.map((review, i) => (
+                <ReviewCard key={review.id} review={review} index={i} />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
