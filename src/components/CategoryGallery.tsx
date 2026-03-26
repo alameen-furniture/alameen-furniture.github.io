@@ -161,22 +161,23 @@ const CategoryGallery = () => {
             </div>
 
             {/* Masonry-style grid */}
-            <div className="columns-1 sm:columns-2 lg:columns-3 gap-4 space-y-4">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {activeCategory.items.map((item, i) => (
                 <div
                   key={item.id}
-                  className="break-inside-avoid group relative rounded-lg overflow-hidden cursor-pointer border border-border/20 hover:border-primary/40 transition-all duration-500"
-                  style={{ animationDelay: `${i * 100}ms` }}
+                  className="group relative aspect-[3/4] rounded-lg overflow-hidden cursor-pointer border border-border/20 hover:border-primary/40 transition-all duration-500 animate-fade-in"
+                  style={{ animationDelay: `${i * 60}ms` }}
                   onClick={() => setLightbox(item)}
                 >
                   <img
                     src={item.image}
                     alt={item.title}
-                    className="w-full h-auto object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     loading="lazy"
+                    decoding="async"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-5">
-                    <p className="text-foreground font-serif text-lg font-semibold">
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-4">
+                    <p className="text-foreground font-serif text-sm sm:text-base font-semibold">
                       {item.title}
                     </p>
                   </div>
