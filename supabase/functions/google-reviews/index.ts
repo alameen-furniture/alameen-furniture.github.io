@@ -6,10 +6,6 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
-// Al Ameen Furniture, Kolkata - Place ID
-// Users can update this if needed
-const PLACE_ID = "ChIJYTKAi3H_AjoRkFKMqXcNaRw";
-
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -21,42 +17,70 @@ serve(async (req) => {
       throw new Error("GOOGLE_PLACES_API_KEY is not configured");
     }
 
-    // Use Places API (New) to get place details with reviews
-    const url = `https://places.googleapis.com/v1/places/${PLACE_ID}`;
+    // Step 1: Find the place using Text Search
+    const searchResponse = await fetch(
+      "https://places.googleapis.com/v1/places:searchText",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Goog-Api-Key": apiKey,
+          "X-Goog-FieldMask": "places.id",
+        },
+        body: JSON.stringify({
+          textQuery:
+            "Al Ameen Furniture Behari Mondal Road Haltu Kolkata 700078",
+        }),
+      }
+    );
 
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "X-Goog-Api-Key": apiKey,
-        "X-Goog-FieldMask":
-          "id,displayName,rating,userRatingCount,reviews",
-      },
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error(`Google Places API error [${response.status}]:`, errorText);
-      throw new Error(
-        `Google Places API returned ${response.status}: ${errorText}`
-      );
+    if (!searchResponse.ok) {
+      const errText = await searchResponse.text();
+      console.error(`Text Search error [${searchResponse.status}]:`, errText);
+      throw new Error(`Text Search failed: ${searchResponse.status}`);
     }
 
-    const data = await response.json();
+    const searchData = await searchResponse.json();
+    const placeId = searchData.places?.[0]?.id;
 
-    // Transform reviews to a clean format
+    if (!placeId) {
+      throw new Error("Could not find place. No results returned.");
+    }
+
+    // Step 2: Get place details with reviews
+    const detailsResponse = await fetch(
+      `https://places.googleapis.com/v1/places/${placeId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Goog-Api-Key": apiKey,
+          "X-Goog-FieldMask":
+            "id,displayName,rating,userRatingCount,reviews",
+        },
+      }
+    );
+
+    if (!detailsResponse.ok) {
+      const errText = await detailsResponse.text();
+      console.error(
+        `Place Details error [${detailsResponse.status}]:`,
+        errText
+      );
+      throw new Error(`Place Details failed: ${detailsResponse.status}`);
+    }
+
+    const data = await detailsResponse.json();
+
+    // Transform reviews
     const reviews = (data.reviews || []).map(
       (review: any, index: number) => ({
         id: `google-${index}`,
         author: review.authorAttribution?.displayName || "Anonymous",
         rating: review.rating || 5,
-        text:
-          review.text?.text ||
-          review.originalText?.text ||
-          "",
+        text: review.text?.text || review.originalText?.text || "",
         date: review.relativePublishTimeDescription || "",
-        profilePhoto:
-          review.authorAttribution?.photoUri || "",
+        profilePhoto: review.authorAttribution?.photoUri || "",
         source: "Google",
       })
     );
@@ -66,6 +90,7 @@ serve(async (req) => {
         rating: data.rating || 0,
         totalReviews: data.userRatingCount || 0,
         reviews,
+        placeId,
       }),
       {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
