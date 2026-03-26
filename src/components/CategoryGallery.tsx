@@ -113,7 +113,7 @@ const CategoryGallery = () => {
   }, [activeCategory]);
 
   return (
-    <section id="portfolio" className="py-24 px-6" ref={ref}>
+    <section id="portfolio" className="py-24 px-6" ref={sectionRef}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16 animate-scroll-fade">
           <p className="text-primary uppercase tracking-[0.3em] text-sm mb-4 font-sans">
