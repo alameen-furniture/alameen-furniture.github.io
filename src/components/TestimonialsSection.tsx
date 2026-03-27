@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Star, Quote, ChevronLeft, ChevronRight, Loader2 } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 
 type Review = {
   id: string;
