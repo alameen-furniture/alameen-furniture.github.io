@@ -120,34 +120,7 @@ const TestimonialsSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
-  const [reviews, setReviews] = useState<Review[]>(fallbackReviews);
-  const [googleRating, setGoogleRating] = useState<number | null>(null);
-  const [totalReviews, setTotalReviews] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  // Fetch Google reviews
-  useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const { data, error } = await supabase.functions.invoke("google-reviews");
-        if (error) throw error;
-        if (data?.reviews?.length > 0) {
-          // Filter out reviews with no text
-          const validReviews = data.reviews.filter((r: Review) => r.text?.trim());
-          if (validReviews.length > 0) {
-            setReviews(validReviews);
-          }
-          if (data.rating) setGoogleRating(data.rating);
-          if (data.totalReviews) setTotalReviews(data.totalReviews);
-        }
-      } catch (err) {
-        console.log("Using fallback reviews:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchReviews();
-  }, []);
+  const reviews = fallbackReviews;
 
   const updateScrollButtons = () => {
     const el = scrollRef.current;
