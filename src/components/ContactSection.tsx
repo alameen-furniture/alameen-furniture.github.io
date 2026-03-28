@@ -41,7 +41,7 @@ const ContactSection = () => {
 
           <div className="animate-scroll-fade rounded-xl overflow-hidden border border-border" style={{ transitionDelay: "200ms" }}>
             <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3685.5!2d88.3637!3d22.5014!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMjLCsDMwJzA1LjAiTiA4OMKwMjEnNDkuMyJF!5e0!3m2!1sen!2sin!4v1700000000000"
+              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3686.046456648257!2d88.38840100000002!3d22.5024401!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a0277f38a4c1f75%3A0x69e50d076b20ed9a!2sAl-%20Ameen%20Furniture!5e0!3m2!1sen!2sin!4v1774712213617!5m2!1sen!2sin"
               width="100%"
               height="400"
               style={{ border: 0, filter: "invert(90%) hue-rotate(180deg)" }}
