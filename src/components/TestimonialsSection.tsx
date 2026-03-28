@@ -44,21 +44,65 @@ const TestimonialsSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const autoSlideRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-  const updateScrollButtons = () => {
+  const updateScrollState = () => {
     const el = scrollRef.current;
     if (!el) return;
     setCanScrollLeft(el.scrollLeft > 10);
     setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 10);
+
+    // Calculate active index based on scroll position
+    const cardWidth = el.querySelector("div")?.offsetWidth ?? 300;
+    const gap = 16;
+    const idx = Math.round(el.scrollLeft / (cardWidth + gap));
+    setActiveIndex(Math.min(idx, reviews.length - 1));
   };
 
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
-    el.addEventListener("scroll", updateScrollButtons, { passive: true });
-    updateScrollButtons();
-    return () => el.removeEventListener("scroll", updateScrollButtons);
+    el.addEventListener("scroll", updateScrollState, { passive: true });
+    updateScrollState();
+    return () => el.removeEventListener("scroll", updateScrollState);
   }, []);
+
+  // Auto-slide
+  useEffect(() => {
+    const startAutoSlide = () => {
+      autoSlideRef.current = setInterval(() => {
+        const el = scrollRef.current;
+        if (!el) return;
+        const atEnd = el.scrollLeft >= el.scrollWidth - el.clientWidth - 10;
+        if (atEnd) {
+          el.scrollTo({ left: 0, behavior: "smooth" });
+        } else {
+          const cardWidth = el.querySelector("div")?.offsetWidth ?? 300;
+          el.scrollBy({ left: cardWidth + 16, behavior: "smooth" });
+        }
+      }, 3500);
+    };
+    startAutoSlide();
+    return () => { if (autoSlideRef.current) clearInterval(autoSlideRef.current); };
+  }, []);
+
+  // Pause auto-slide on hover/touch
+  const pauseAutoSlide = () => { if (autoSlideRef.current) clearInterval(autoSlideRef.current); };
+  const resumeAutoSlide = () => {
+    pauseAutoSlide();
+    autoSlideRef.current = setInterval(() => {
+      const el = scrollRef.current;
+      if (!el) return;
+      const atEnd = el.scrollLeft >= el.scrollWidth - el.clientWidth - 10;
+      if (atEnd) {
+        el.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        const cardWidth = el.querySelector("div")?.offsetWidth ?? 300;
+        el.scrollBy({ left: cardWidth + 16, behavior: "smooth" });
+      }
+    }, 3500);
+  };
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -82,10 +126,18 @@ const TestimonialsSection = () => {
     el.scrollBy({ left: direction === "left" ? -340 : 340, behavior: "smooth" });
   };
 
+  const scrollToIndex = (index: number) => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const card = el.children[index] as HTMLElement;
+    if (card) {
+      el.scrollTo({ left: card.offsetLeft - 24, behavior: "smooth" });
+    }
+  };
+
   return (
     <section ref={sectionRef} className="py-24 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
-        {/* Header */}
         <div className="text-center mb-14 animate-scroll-fade">
           <p className="text-primary uppercase tracking-[0.3em] text-sm mb-4 font-sans">
             Testimonials
@@ -96,8 +148,13 @@ const TestimonialsSection = () => {
           <div className="w-16 h-[1px] bg-primary mx-auto mt-6" />
         </div>
 
-        {/* Carousel */}
-        <div className="relative animate-scroll-fade">
+        <div
+          className="relative animate-scroll-fade"
+          onMouseEnter={pauseAutoSlide}
+          onMouseLeave={resumeAutoSlide}
+          onTouchStart={pauseAutoSlide}
+          onTouchEnd={resumeAutoSlide}
+        >
           <button
             onClick={() => scroll("left")}
             className={`hidden sm:flex absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full border border-border bg-card/80 backdrop-blur-sm transition-all duration-300 ${
@@ -126,9 +183,24 @@ const TestimonialsSection = () => {
               <ReviewCard key={i} review={review} index={i} />
             ))}
           </div>
+
+          {/* Dot Indicators */}
+          <div className="flex justify-center gap-2 mt-5">
+            {reviews.map((_, i) => (
+              <button
+                key={i}
+                onClick={() => scrollToIndex(i)}
+                aria-label={`Go to review ${i + 1}`}
+                className={`rounded-full transition-all duration-300 ${
+                  activeIndex === i
+                    ? "w-6 h-2.5 bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.5)]"
+                    : "w-2.5 h-2.5 bg-muted hover:bg-primary/50"
+                }`}
+              />
+            ))}
+          </div>
         </div>
 
-        {/* CTA Button */}
         <div className="text-center mt-10 animate-scroll-fade">
           <a
             href="https://share.google/nnaV7LoYXubIFYTg8"
