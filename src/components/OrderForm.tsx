@@ -3,12 +3,14 @@ import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
+import { supabase } from "@/integrations/supabase/client";
 
 const OrderForm = () => {
   const ref = useScrollAnimation();
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.currentTarget;
     const data = new FormData(form);
@@ -22,14 +24,25 @@ const OrderForm = () => {
       return;
     }
 
-    const subject = encodeURIComponent("Custom Furniture Enquiry from " + name);
-    const body = encodeURIComponent(
-      `Name: ${name}\nPhone: ${phone}\nEmail: ${email}\nRequirement: ${requirement}`
-    );
-    window.open(`mailto:akbarkhan891071@gmail.com?subject=${subject}&body=${body}`, "_self");
+    setIsSubmitting(true);
+    try {
+      const { error } = await supabase.from("enquiries" as any).insert({
+        name,
+        phone,
+        email: email || null,
+        requirement: requirement || null,
+      });
 
-    setSubmitted(true);
-    toast({ title: "Thank you! We will contact you shortly." });
+      if (error) throw error;
+
+      setSubmitted(true);
+      toast({ title: "Thank you! Your enquiry has been submitted successfully." });
+    } catch (err) {
+      console.error("Enquiry submission error:", err);
+      toast({ title: "Something went wrong. Please try again.", variant: "destructive" });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -84,9 +97,10 @@ const OrderForm = () => {
             </div>
             <button
               type="submit"
-              className="w-full py-4 rounded-full bg-primary text-primary-foreground font-semibold text-base gold-glow gold-glow-hover transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+              disabled={isSubmitting}
+              className="w-full py-4 rounded-full bg-primary text-primary-foreground font-semibold text-base gold-glow gold-glow-hover transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Submit Enquiry
+              {isSubmitting ? "Submitting..." : "Submit Enquiry"}
             </button>
           </form>
         )}
