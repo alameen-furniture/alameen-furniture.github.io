@@ -97,9 +97,10 @@ const OrderForm = () => {
             </div>
             <button
               type="submit"
-              className="w-full py-4 rounded-full bg-primary text-primary-foreground font-semibold text-base gold-glow gold-glow-hover transition-all duration-300 hover:scale-[1.02] active:scale-[0.98]"
+              disabled={isSubmitting}
+              className="w-full py-4 rounded-full bg-primary text-primary-foreground font-semibold text-base gold-glow gold-glow-hover transition-all duration-300 hover:scale-[1.02] active:scale-[0.98] disabled:opacity-60 disabled:cursor-not-allowed"
             >
-              Submit Enquiry
+              {isSubmitting ? "Submitting..." : "Submit Enquiry"}
             </button>
           </form>
         )}
