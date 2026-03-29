@@ -12,7 +12,7 @@ serve(async (req) => {
   }
 
   try {
-    const { name, phone, email, requirement } = await req.json();
+    const { name, phone, email, requirement, image_url } = await req.json();
 
     if (!name || !phone) {
       return new Response(JSON.stringify({ error: "Name and phone are required" }), {
@@ -21,7 +21,6 @@ serve(async (req) => {
       });
     }
 
-    // Store in database
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const supabaseKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const supabase = createClient(supabaseUrl, supabaseKey);
@@ -31,6 +30,7 @@ serve(async (req) => {
       phone,
       email: email || null,
       requirement: requirement || null,
+      image_url: image_url || null,
     });
 
     if (dbError) {
@@ -41,37 +41,39 @@ serve(async (req) => {
       });
     }
 
-    // Send email notification using Lovable API
-    const lovableApiKey = Deno.env.get("LOVABLE_API_KEY");
-    if (lovableApiKey) {
-      try {
-        const emailBody = `
-          <h2>New Furniture Enquiry</h2>
-          <table style="border-collapse:collapse;width:100%;max-width:500px;">
-            <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Name</td><td style="padding:8px;border:1px solid #ddd;">${name}</td></tr>
-            <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Phone</td><td style="padding:8px;border:1px solid #ddd;">${phone}</td></tr>
-            <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Email</td><td style="padding:8px;border:1px solid #ddd;">${email || "Not provided"}</td></tr>
-            <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Requirement</td><td style="padding:8px;border:1px solid #ddd;">${requirement || "Not specified"}</td></tr>
-          </table>
-          <p style="margin-top:16px;color:#666;">This enquiry was submitted from your website.</p>
-        `;
+    // Send email notification
+    try {
+      const imageSection = image_url
+        ? `<tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Reference Image</td><td style="padding:8px;border:1px solid #ddd;"><a href="${image_url}" target="_blank"><img src="${image_url}" alt="Reference" style="max-width:200px;max-height:200px;border-radius:8px;" /></a></td></tr>`
+        : "";
 
-        await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${supabaseKey}`,
-          },
-          body: JSON.stringify({
-            to: "akbarkhan891071@gmail.com",
-            subject: `New Enquiry from ${name} - Al Ameen Furniture`,
-            html: emailBody,
-          }),
-        });
-      } catch (emailErr) {
-        console.error("Email notification error:", emailErr);
-        // Don't fail the request if email fails
-      }
+      const emailBody = `
+        <h2>🪑 New Furniture Enquiry</h2>
+        <table style="border-collapse:collapse;width:100%;max-width:500px;">
+          <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Name</td><td style="padding:8px;border:1px solid #ddd;">${name}</td></tr>
+          <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Phone</td><td style="padding:8px;border:1px solid #ddd;"><a href="tel:${phone}">${phone}</a></td></tr>
+          <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Email</td><td style="padding:8px;border:1px solid #ddd;">${email || "Not provided"}</td></tr>
+          <tr><td style="padding:8px;border:1px solid #ddd;font-weight:bold;">Requirement</td><td style="padding:8px;border:1px solid #ddd;">${requirement || "Not specified"}</td></tr>
+          ${imageSection}
+        </table>
+        <p style="margin-top:16px;color:#666;">This enquiry was submitted from your Al Ameen Furniture website.</p>
+        <p style="margin-top:8px;"><a href="https://wa.me/${phone.replace(/[^0-9]/g, "")}?text=Hi%20${encodeURIComponent(name)}%2C%20thank%20you%20for%20your%20enquiry%20at%20Al-Ameen%20Furniture!" style="background:#25D366;color:white;padding:10px 20px;border-radius:6px;text-decoration:none;display:inline-block;">Reply on WhatsApp</a></p>
+      `;
+
+      await fetch(`${supabaseUrl}/functions/v1/send-transactional-email`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${supabaseKey}`,
+        },
+        body: JSON.stringify({
+          to: "akbarkhan891071@gmail.com",
+          subject: `🪑 New Enquiry from ${name} - Al Ameen Furniture`,
+          html: emailBody,
+        }),
+      });
+    } catch (emailErr) {
+      console.error("Email notification error:", emailErr);
     }
 
     return new Response(JSON.stringify({ success: true }), {

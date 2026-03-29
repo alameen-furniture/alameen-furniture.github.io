@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
-import { LogOut, Trash2, Phone, Mail, Clock, Search, RefreshCw } from "lucide-react";
+import { LogOut, Trash2, Phone, Mail, Clock, Search, RefreshCw, Image } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
 interface Enquiry {
@@ -12,6 +12,7 @@ interface Enquiry {
   phone: string;
   email: string | null;
   requirement: string | null;
+  image_url: string | null;
   created_at: string;
 }
 
@@ -19,6 +20,7 @@ const AdminDashboard = () => {
   const [enquiries, setEnquiries] = useState<Enquiry[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const navigate = useNavigate();
 
   const checkAuth = async () => {
@@ -96,6 +98,20 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Image Preview Modal */}
+      {previewImage && (
+        <div
+          className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
+          onClick={() => setPreviewImage(null)}
+        >
+          <img
+            src={previewImage}
+            alt="Reference"
+            className="max-w-full max-h-[90vh] rounded-xl object-contain"
+          />
+        </div>
+      )}
+
       {/* Header */}
       <header className="border-b border-border bg-card sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
@@ -163,6 +179,24 @@ const AdminDashboard = () => {
                       <p className="mt-3 text-sm text-foreground/80 bg-secondary rounded-lg p-3">
                         {enquiry.requirement}
                       </p>
+                    )}
+                    {/* Reference Image */}
+                    {enquiry.image_url && (
+                      <div className="mt-3">
+                        <button
+                          onClick={() => setPreviewImage(enquiry.image_url)}
+                          className="flex items-center gap-2 group"
+                        >
+                          <img
+                            src={enquiry.image_url}
+                            alt="Reference"
+                            className="w-20 h-20 object-cover rounded-lg border border-border group-hover:border-primary transition-colors"
+                          />
+                          <span className="text-xs text-muted-foreground flex items-center gap-1 group-hover:text-primary transition-colors">
+                            <Image className="w-3.5 h-3.5" /> View Image
+                          </span>
+                        </button>
+                      </div>
                     )}
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">

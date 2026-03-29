@@ -18,6 +18,7 @@ const OrderForm = () => {
     const phone = (data.get("phone") as string || "").trim();
     const email = (data.get("email") as string || "").trim();
     const requirement = (data.get("requirement") as string || "").trim();
+    const imageFile = data.get("image") as File | null;
 
     if (!name || !phone) {
       toast({ title: "Please fill in your name and phone number.", variant: "destructive" });
@@ -26,8 +27,28 @@ const OrderForm = () => {
 
     setIsSubmitting(true);
     try {
+      let imageUrl: string | null = null;
+
+      // Upload image if provided
+      if (imageFile && imageFile.size > 0) {
+        const fileExt = imageFile.name.split('.').pop();
+        const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
+        const { error: uploadError } = await supabase.storage
+          .from('enquiry-images')
+          .upload(fileName, imageFile);
+
+        if (uploadError) {
+          console.error("Image upload error:", uploadError);
+        } else {
+          const { data: urlData } = supabase.storage
+            .from('enquiry-images')
+            .getPublicUrl(fileName);
+          imageUrl = urlData.publicUrl;
+        }
+      }
+
       const { error } = await supabase.functions.invoke("notify-enquiry", {
-        body: { name, phone, email: email || null, requirement: requirement || null },
+        body: { name, phone, email: email || null, requirement: requirement || null, image_url: imageUrl },
       });
 
       if (error) throw error;
