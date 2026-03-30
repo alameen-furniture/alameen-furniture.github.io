@@ -127,13 +127,13 @@ const CategoryGallery = () => {
 
         {/* Category Cards View */}
         {!activeCategory && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 animate-scroll-fade">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {categories.map((cat, i) => (
               <button
                 key={cat.key}
                 onClick={() => setActiveCategory(cat)}
-                className="group relative overflow-hidden rounded-xl border border-border/30 hover:border-primary/50 transition-all duration-700 text-left"
-                style={{ animationDelay: `${i * 150}ms` }}
+                className="animate-scroll-fade group relative overflow-hidden rounded-xl border border-border/30 hover:border-primary/50 transition-all duration-700 text-left hover:-translate-y-2 gold-glow-hover"
+                style={{ transitionDelay: `${i * 150}ms` }}
               >
                 <div className="aspect-[3/4] sm:aspect-[4/5] relative overflow-hidden">
                   <img
