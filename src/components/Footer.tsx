@@ -88,7 +88,7 @@ const Footer = () => {
               </li>
               <li className="flex items-start gap-3 text-sm text-muted-foreground">
                 <MapPin className="w-4 h-4 mt-0.5 text-primary/70 shrink-0" />
-                <span>7/2 Ekbalpore Road, Near Khidirpur, Kolkata 700023</span>
+                <span>Behari Mondal Road, Shanti Pally, Kolkata</span>
               </li>
               <li className="flex items-start gap-3 text-sm text-muted-foreground">
                 <Clock className="w-4 h-4 mt-0.5 text-primary/70" />
