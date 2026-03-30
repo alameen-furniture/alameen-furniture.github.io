@@ -1,4 +1,5 @@
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { Star, Users, Award, TrendingUp } from "lucide-react";
 
 const AboutSection = () => {
   const ref = useScrollAnimation();
@@ -14,15 +15,48 @@ const AboutSection = () => {
               className="w-full h-full object-cover img-zoom"
               loading="lazy"
             />
-            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-background/80 to-transparent p-8">
-              <div className="flex gap-8">
-                <div>
-                  <p className="font-serif text-3xl font-bold text-primary">50+</p>
-                  <p className="text-muted-foreground text-sm">Happy Customers</p>
+            {/* Floating stats overlay */}
+            <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
+              <div className="grid grid-cols-2 gap-3">
+                {/* Happy Customers Card */}
+                <div className="group relative rounded-xl border border-primary/30 bg-background/80 backdrop-blur-md p-4 overflow-hidden animate-border-glow hover:border-primary/60 transition-all duration-500">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                        <Users className="w-4 h-4 text-primary" />
+                      </div>
+                      <span className="text-xs text-muted-foreground uppercase tracking-wider">Customers</span>
+                    </div>
+                    <p className="font-serif text-3xl font-bold text-primary animate-count">50+</p>
+                    <p className="text-muted-foreground text-xs mt-1">Happy & Satisfied</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-serif text-3xl font-bold text-primary">5★</p>
-                  <p className="text-muted-foreground text-sm">Average Rating</p>
+
+                {/* Rating Card */}
+                <div className="group relative rounded-xl border border-primary/30 bg-background/80 backdrop-blur-md p-4 overflow-hidden animate-border-glow hover:border-primary/60 transition-all duration-500" style={{ animationDelay: '1.5s' }}>
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-2 mb-2">
+                      <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
+                        <Award className="w-4 h-4 text-primary" />
+                      </div>
+                      <span className="text-xs text-muted-foreground uppercase tracking-wider">Rating</span>
+                    </div>
+                    <div className="flex items-baseline gap-1">
+                      <p className="font-serif text-3xl font-bold text-primary">5</p>
+                      <div className="flex gap-0.5">
+                        {[...Array(5)].map((_, i) => (
+                          <Star
+                            key={i}
+                            className="w-3 h-3 text-primary fill-primary"
+                            style={{ animationDelay: `${i * 150}ms` }}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                    <p className="text-muted-foreground text-xs mt-1">Google Reviews</p>
+                  </div>
                 </div>
               </div>
             </div>
