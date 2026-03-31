@@ -19,7 +19,7 @@ const AboutSection = () => {
             <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
               <div className="grid grid-cols-2 gap-3">
                 {/* Happy Customers Card */}
-                <div className="group relative rounded-xl border border-primary/30 bg-background/80 backdrop-blur-md p-4 overflow-hidden animate-border-glow hover:border-primary/60 transition-all duration-500">
+                <a href="https://share.google/hwZRaQpBDTIYWTj27" target="_blank" rel="noopener noreferrer" className="group relative rounded-xl border border-primary/30 bg-background/80 backdrop-blur-md p-4 overflow-hidden animate-border-glow hover:border-primary/60 transition-all duration-500 cursor-pointer no-underline">
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <div className="relative z-10">
                     <div className="flex items-center gap-2 mb-2">
@@ -31,10 +31,10 @@ const AboutSection = () => {
                     <p className="font-serif text-3xl font-bold text-primary animate-count">50+</p>
                     <p className="text-muted-foreground text-xs mt-1">Happy & Satisfied</p>
                   </div>
-                </div>
+                </a>
 
                 {/* Rating Card */}
-                <div className="group relative rounded-xl border border-primary/30 bg-background/80 backdrop-blur-md p-4 overflow-hidden animate-border-glow hover:border-primary/60 transition-all duration-500" style={{ animationDelay: '1.5s' }}>
+                <a href="https://share.google/hwZRaQpBDTIYWTj27" target="_blank" rel="noopener noreferrer" className="group relative rounded-xl border border-primary/30 bg-background/80 backdrop-blur-md p-4 overflow-hidden animate-border-glow hover:border-primary/60 transition-all duration-500 cursor-pointer no-underline" style={{ animationDelay: '1.5s' }}>
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <div className="relative z-10">
                     <div className="flex items-center gap-2 mb-2">
@@ -57,7 +57,7 @@ const AboutSection = () => {
                     </div>
                     <p className="text-muted-foreground text-xs mt-1">Google Reviews</p>
                   </div>
-                </div>
+                </a>
               </div>
             </div>
           </div>
