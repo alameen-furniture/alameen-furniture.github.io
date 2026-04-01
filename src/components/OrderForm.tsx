@@ -5,6 +5,9 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
+
 const OrderForm = () => {
   const ref = useScrollAnimation();
   const [submitted, setSubmitted] = useState(false);
@@ -25,25 +28,50 @@ const OrderForm = () => {
       return;
     }
 
+    // Client-side phone validation
+    const phoneClean = phone.replace(/[\s\-()]/g, "");
+    if (phoneClean.length < 7 || phoneClean.length > 20 || !/^[+]?\d+$/.test(phoneClean)) {
+      toast({ title: "Please enter a valid phone number.", variant: "destructive" });
+      return;
+    }
+
+    // Client-side email validation
+    if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      toast({ title: "Please enter a valid email address.", variant: "destructive" });
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       let imageUrl: string | null = null;
 
-      // Upload image if provided
+      // Upload image if provided with validation
       if (imageFile && imageFile.size > 0) {
-        const fileExt = imageFile.name.split('.').pop();
+        if (!ALLOWED_TYPES.includes(imageFile.type)) {
+          toast({ title: "Only JPG, PNG, WebP, and GIF images are allowed.", variant: "destructive" });
+          setIsSubmitting(false);
+          return;
+        }
+        if (imageFile.size > MAX_FILE_SIZE) {
+          toast({ title: "Image must be under 5MB.", variant: "destructive" });
+          setIsSubmitting(false);
+          return;
+        }
+
+        const fileExt = imageFile.name.split('.').pop()?.toLowerCase() || 'jpg';
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
         const { error: uploadError } = await supabase.storage
           .from('enquiry-images')
-          .upload(fileName, imageFile);
+          .upload(fileName, imageFile, {
+            contentType: imageFile.type,
+          });
 
         if (uploadError) {
           console.error("Image upload error:", uploadError);
         } else {
-          const { data: urlData } = supabase.storage
-            .from('enquiry-images')
-            .getPublicUrl(fileName);
-          imageUrl = urlData.publicUrl;
+          // Store the file path, not the public URL (bucket is now private)
+          const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+          imageUrl = `${supabaseUrl}/storage/v1/object/enquiry-images/${fileName}`;
         }
       }
 
@@ -94,7 +122,7 @@ const OrderForm = () => {
             <div className="grid sm:grid-cols-2 gap-5">
               <div>
                 <label className="text-sm text-muted-foreground mb-1.5 block">Name *</label>
-                <Input name="name" required placeholder="Your name" className="bg-secondary border-border focus:border-primary" maxLength={100} />
+                <Input name="name" required placeholder="Your name" className="bg-secondary border-border focus:border-primary" maxLength={200} />
               </div>
               <div>
                 <label className="text-sm text-muted-foreground mb-1.5 block">Phone *</label>
@@ -107,11 +135,11 @@ const OrderForm = () => {
             </div>
             <div>
               <label className="text-sm text-muted-foreground mb-1.5 block">Your Requirement</label>
-              <Textarea name="requirement" rows={4} placeholder="Describe what you're looking for..." className="bg-secondary border-border focus:border-primary" maxLength={1000} />
+              <Textarea name="requirement" rows={4} placeholder="Describe what you're looking for..." className="bg-secondary border-border focus:border-primary" maxLength={2000} />
             </div>
             <div>
-              <label className="text-sm text-muted-foreground mb-1.5 block">Upload Reference Image</label>
-              <Input name="image" type="file" accept="image/*" className="bg-secondary border-border file:text-primary file:font-medium" />
+              <label className="text-sm text-muted-foreground mb-1.5 block">Upload Reference Image (max 5MB)</label>
+              <Input name="image" type="file" accept="image/jpeg,image/png,image/webp,image/gif" className="bg-secondary border-border file:text-primary file:font-medium" />
             </div>
             <button
               type="submit"
