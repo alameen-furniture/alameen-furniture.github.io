@@ -23,8 +23,8 @@ const Index = () => {
         <TestimonialsSection />
         <OrderForm />
         <WhatsAppCTA />
-        <FAQSection />
         <ContactSection />
+        <FAQSection />
       </main>
       <Footer />
       <FloatingButtons />
