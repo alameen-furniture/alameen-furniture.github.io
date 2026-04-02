@@ -1,38 +1,35 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Star, ChevronLeft, ChevronRight, ExternalLink, CheckCircle } from "lucide-react";
-import { useState } from "react";
 
 const reviews = [
-  { author: "Md. Arman Khan", text: "Good behaviour and fast service." },
-  { author: "Ayaan Ali", text: "Very good furniture work and finishing." },
-  { author: "Saif Ahmed", text: "Nice design and quality is very good." },
-  { author: "Imran Hussain", text: "Professional work and timely delivery." },
-  { author: "Faizan Khan", text: "Very satisfied with the custom sofa work." },
+  { author: "Md. Arman Khan", text: "Fast service and excellent behaviour." },
+  { author: "Ayaan Ali", text: "Top-quality furniture with great finishing." },
+  { author: "Saif Ahmed", text: "Beautiful design and premium quality." },
+  { author: "Imran Hussain", text: "Professional and delivered on time." },
+  { author: "Faizan Khan", text: "Loved the custom sofa work!" },
 ];
 
 const Stars = () => (
-  <div className="flex gap-1">
+  <div className="flex gap-0.5">
     {[1, 2, 3, 4, 5].map((s) => (
-      <Star key={s} className="w-4 h-4 fill-primary text-primary" />
+      <Star key={s} className="w-3.5 h-3.5 fill-primary text-primary" />
     ))}
   </div>
 );
 
 const ReviewCard = ({ review, index }: { review: typeof reviews[0]; index: number }) => (
   <div
-    className="flex-shrink-0 w-[85vw] sm:w-[320px] snap-center animate-slide-in"
+    className="flex-shrink-0 w-[80vw] sm:w-[300px] snap-center animate-slide-in"
     style={{ animationDelay: `${index * 150}ms` }}
   >
-    <div className="h-full bg-card border border-border/30 rounded-2xl p-6 flex flex-col gap-4 shadow-lg animate-border-glow hover:shadow-[0_0_25px_hsl(38_45%_60%/0.25)] hover:-translate-y-1 transition-all duration-500">
+    <div className="h-full bg-card border border-border/30 rounded-2xl p-5 flex flex-col gap-3 shadow-lg animate-border-glow hover:shadow-[0_0_25px_hsl(38_45%_60%/0.25)] hover:-translate-y-1 transition-all duration-500">
       <Stars />
-      <p className="text-foreground text-sm leading-relaxed">
-        "{review.text}"
-      </p>
-      <div className="mt-auto pt-3 border-t border-border/20">
+      <p className="text-foreground text-sm leading-relaxed">"{review.text}"</p>
+      <div className="mt-auto pt-3 border-t border-border/20 flex items-center justify-between">
         <p className="text-foreground font-semibold text-sm">– {review.author}</p>
-        <div className="flex items-center gap-1.5 mt-1.5">
-          <CheckCircle className="w-3.5 h-3.5 text-primary" />
-          <span className="text-primary text-xs font-medium">Verified Customer</span>
+        <div className="flex items-center gap-1">
+          <CheckCircle className="w-3 h-3 text-primary" />
+          <span className="text-primary text-[10px] font-medium">Verified</span>
         </div>
       </div>
     </div>
@@ -52,8 +49,6 @@ const TestimonialsSection = () => {
     if (!el) return;
     setCanScrollLeft(el.scrollLeft > 10);
     setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 10);
-
-    // Calculate active index based on scroll position
     const cardWidth = el.querySelector("div")?.offsetWidth ?? 300;
     const gap = 16;
     const idx = Math.round(el.scrollLeft / (cardWidth + gap));
@@ -68,7 +63,6 @@ const TestimonialsSection = () => {
     return () => el.removeEventListener("scroll", updateScrollState);
   }, []);
 
-  // Auto-slide
   useEffect(() => {
     const startAutoSlide = () => {
       autoSlideRef.current = setInterval(() => {
@@ -87,7 +81,6 @@ const TestimonialsSection = () => {
     return () => { if (autoSlideRef.current) clearInterval(autoSlideRef.current); };
   }, []);
 
-  // Pause auto-slide on hover/touch
   const pauseAutoSlide = () => { if (autoSlideRef.current) clearInterval(autoSlideRef.current); };
   const resumeAutoSlide = () => {
     pauseAutoSlide();
@@ -136,14 +129,14 @@ const TestimonialsSection = () => {
   };
 
   return (
-    <section ref={sectionRef} className="py-24 overflow-hidden">
+    <section ref={sectionRef} className="py-28 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6">
         <div className="text-center mb-14 animate-scroll-fade">
           <p className="text-primary uppercase tracking-[0.3em] text-sm mb-4 font-sans">
-            Testimonials
+            Based on Google Reviews
           </p>
           <h2 className="font-serif text-3xl sm:text-5xl font-bold text-foreground">
-            Rated 5<span className="text-primary">⭐</span> by 50+ Happy Customers on Google
+            Rated 5<span className="text-primary">★</span> by 50+ Customers
           </h2>
           <div className="w-16 h-[1px] bg-primary mx-auto mt-6" />
         </div>
@@ -184,7 +177,6 @@ const TestimonialsSection = () => {
             ))}
           </div>
 
-          {/* Dot Indicators */}
           <div className="flex justify-center gap-2 mt-5">
             {reviews.map((_, i) => (
               <button

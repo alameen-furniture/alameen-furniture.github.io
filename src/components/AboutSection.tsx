@@ -1,24 +1,22 @@
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { Star, Users, Award, TrendingUp } from "lucide-react";
+import { Star, Users, Award } from "lucide-react";
 
 const AboutSection = () => {
   const ref = useScrollAnimation();
 
   return (
-    <section id="about" className="py-24 px-6" ref={ref}>
+    <section id="about" className="py-28 px-6" ref={ref}>
       <div className="max-w-6xl mx-auto grid md:grid-cols-2 gap-16 items-center">
         <div className="animate-scroll-fade">
           <div className="relative rounded-lg overflow-hidden aspect-[4/5]">
             <img
               src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=800&q=80"
-              alt="Al Ameen Furniture craftsmanship"
+              alt="Al Ameen Furniture workshop — custom furniture craftsmanship in Kolkata"
               className="w-full h-full object-cover img-zoom"
               loading="lazy"
             />
-            {/* Floating stats overlay */}
             <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
               <div className="grid grid-cols-2 gap-3">
-                {/* Happy Customers Card */}
                 <a href="https://share.google/hwZRaQpBDTIYWTj27" target="_blank" rel="noopener noreferrer" className="group relative rounded-xl border border-primary/30 bg-background/80 backdrop-blur-md p-4 overflow-hidden animate-border-glow hover:border-primary/60 transition-all duration-500 cursor-pointer no-underline">
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <div className="relative z-10">
@@ -33,7 +31,6 @@ const AboutSection = () => {
                   </div>
                 </a>
 
-                {/* Rating Card */}
                 <a href="https://share.google/hwZRaQpBDTIYWTj27" target="_blank" rel="noopener noreferrer" className="group relative rounded-xl border border-primary/30 bg-background/80 backdrop-blur-md p-4 overflow-hidden animate-border-glow hover:border-primary/60 transition-all duration-500 cursor-pointer no-underline" style={{ animationDelay: '1.5s' }}>
                   <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                   <div className="relative z-10">
@@ -47,11 +44,7 @@ const AboutSection = () => {
                       <p className="font-serif text-3xl font-bold text-primary">5</p>
                       <div className="flex gap-0.5">
                         {[...Array(5)].map((_, i) => (
-                          <Star
-                            key={i}
-                            className="w-3 h-3 text-primary fill-primary"
-                            style={{ animationDelay: `${i * 150}ms` }}
-                          />
+                          <Star key={i} className="w-3 h-3 text-primary fill-primary" style={{ animationDelay: `${i * 150}ms` }} />
                         ))}
                       </div>
                     </div>
@@ -66,13 +59,13 @@ const AboutSection = () => {
         <div className="animate-scroll-fade" style={{ transitionDelay: "200ms" }}>
           <p className="text-primary uppercase tracking-[0.3em] text-sm mb-4">About Us</p>
           <h2 className="font-serif text-3xl sm:text-4xl font-bold text-foreground mb-6">
-            A Legacy of <span className="text-primary italic">Fine Craftsmanship</span>
+            Premium <span className="text-primary italic">Furniture Manufacturer</span> in Kolkata
           </h2>
           <p className="text-muted-foreground leading-relaxed mb-6">
-            Al Ameen Furniture is a trusted furniture manufacturer in Kolkata with 50+ satisfied customers and 5-star reviews. We specialize in crafting premium custom furniture including sofas, beds, wardrobes, and complete home interiors.
+            Al Ameen Furniture is Kolkata's trusted custom furniture maker with 50+ satisfied customers. We craft premium sofas, designer beds, wardrobes & complete home interiors.
           </p>
           <p className="text-muted-foreground leading-relaxed mb-8">
-            Every piece we create is a reflection of meticulous attention to detail, superior materials, and the timeless art of furniture making. Your vision, our craftsmanship.
+            Every piece reflects meticulous attention to detail, superior materials, and timeless craftsmanship. Your vision, our expertise.
           </p>
           <a
             href="#portfolio"

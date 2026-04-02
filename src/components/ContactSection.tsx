@@ -5,21 +5,24 @@ const ContactSection = () => {
   const ref = useScrollAnimation();
 
   return (
-    <section id="contact" className="py-24 px-6" ref={ref}>
+    <section id="contact" className="py-28 px-6" ref={ref}>
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16 animate-scroll-fade">
           <p className="text-primary uppercase tracking-[0.3em] text-sm mb-4">Get in Touch</p>
-          <h2 className="font-serif text-3xl sm:text-5xl font-bold text-foreground">
-            Visit Our <span className="text-primary italic">Workshop</span>
+          <h2 className="font-serif text-3xl sm:text-5xl font-bold text-foreground mb-3">
+            Visit Our <span className="text-primary italic">Workshop</span> in Kolkata
           </h2>
+          <p className="text-muted-foreground text-base max-w-lg mx-auto">
+            Call now for a free consultation. Serving all areas of Kolkata.
+          </p>
         </div>
 
         <div className="grid md:grid-cols-2 gap-12">
           <div className="animate-scroll-fade space-y-8">
             {[
-              { icon: Phone, label: "Phone", value: "+91 89107 24040", href: "tel:+918910724040" },
-              { icon: Mail, label: "Email", value: "akbarkhan891071@gmail.com", href: "mailto:akbarkhan891071@gmail.com" },
-              { icon: MapPin, label: "Address", value: "36, 4/3, Behari Mondal Rd, Shanti Pally, Ramlal Bazar, Haltu, Kolkata, West Bengal 700078", href: "https://maps.google.com/?q=36,+4/3,+Behari+Mondal+Rd,+Haltu,+Kolkata+700078" },
+              { icon: Phone, label: "Phone", value: "+91 89107 24040", href: "tel:+918910724040", highlight: true },
+              { icon: Mail, label: "Email", value: "akbarkhan891071@gmail.com", href: "mailto:akbarkhan891071@gmail.com", highlight: false },
+              { icon: MapPin, label: "Address", value: "36, 4/3, Behari Mondal Rd, Shanti Pally, Ramlal Bazar, Haltu, Kolkata, West Bengal 700078", href: "https://maps.google.com/?q=36,+4/3,+Behari+Mondal+Rd,+Haltu,+Kolkata+700078", highlight: false },
             ].map((item) => (
               <a
                 key={item.label}
@@ -28,12 +31,12 @@ const ContactSection = () => {
                 rel={item.label === "Address" ? "noopener noreferrer" : undefined}
                 className="flex gap-5 group"
               >
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 group-hover:bg-primary/20 transition-colors">
+                <div className={`w-12 h-12 rounded-full flex items-center justify-center flex-shrink-0 transition-colors ${item.highlight ? 'bg-primary/20 group-hover:bg-primary/30' : 'bg-primary/10 group-hover:bg-primary/20'}`}>
                   <item.icon className="w-5 h-5 text-primary" />
                 </div>
                 <div>
                   <p className="text-sm text-muted-foreground mb-1">{item.label}</p>
-                  <p className="text-foreground group-hover:text-primary transition-colors">{item.value}</p>
+                  <p className={`group-hover:text-primary transition-colors ${item.highlight ? 'text-primary font-semibold text-lg' : 'text-foreground'}`}>{item.value}</p>
                 </div>
               </a>
             ))}
@@ -48,7 +51,7 @@ const ContactSection = () => {
               allowFullScreen
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
-              title="Al Ameen Furniture Location"
+              title="Al Ameen Furniture — Custom Furniture Manufacturer in Kolkata"
             />
           </div>
         </div>
