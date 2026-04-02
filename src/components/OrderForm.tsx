@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
 const OrderForm = () => {
@@ -28,14 +28,12 @@ const OrderForm = () => {
       return;
     }
 
-    // Client-side phone validation
     const phoneClean = phone.replace(/[\s\-()]/g, "");
     if (phoneClean.length < 7 || phoneClean.length > 20 || !/^[+]?\d+$/.test(phoneClean)) {
       toast({ title: "Please enter a valid phone number.", variant: "destructive" });
       return;
     }
 
-    // Client-side email validation
     if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
       toast({ title: "Please enter a valid email address.", variant: "destructive" });
       return;
@@ -45,7 +43,6 @@ const OrderForm = () => {
     try {
       let imageUrl: string | null = null;
 
-      // Upload image if provided with validation
       if (imageFile && imageFile.size > 0) {
         if (!ALLOWED_TYPES.includes(imageFile.type)) {
           toast({ title: "Only JPG, PNG, WebP, and GIF images are allowed.", variant: "destructive" });
@@ -62,14 +59,11 @@ const OrderForm = () => {
         const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
         const { error: uploadError } = await supabase.storage
           .from('enquiry-images')
-          .upload(fileName, imageFile, {
-            contentType: imageFile.type,
-          });
+          .upload(fileName, imageFile, { contentType: imageFile.type });
 
         if (uploadError) {
           console.error("Image upload error:", uploadError);
         } else {
-          // Store the file path, not the public URL (bucket is now private)
           const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
           imageUrl = `${supabaseUrl}/storage/v1/object/enquiry-images/${fileName}`;
         }
@@ -92,12 +86,12 @@ const OrderForm = () => {
   };
 
   return (
-    <section id="quote" className="py-24 px-6" ref={ref}>
+    <section id="quote" className="py-28 px-6" ref={ref}>
       <div className="max-w-2xl mx-auto">
         <div className="text-center mb-12 animate-scroll-fade">
           <p className="text-primary uppercase tracking-[0.3em] text-sm mb-4">Get a Quote</p>
           <h2 className="font-serif text-3xl sm:text-5xl font-bold text-foreground">
-            Request a <span className="text-primary italic">Custom</span> Order
+            Get Your <span className="text-primary italic">Custom</span> Furniture Today
           </h2>
         </div>
 
@@ -107,7 +101,7 @@ const OrderForm = () => {
               <svg className="w-8 h-8 text-primary" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" /></svg>
             </div>
             <h3 className="font-serif text-2xl text-foreground mb-3">Thank You!</h3>
-            <p className="text-muted-foreground mb-6">We will contact you shortly. You can also send your design on WhatsApp for a faster response.</p>
+            <p className="text-muted-foreground mb-6">We will contact you shortly. Send your design on WhatsApp for a faster response.</p>
             <a
               href="https://wa.me/918910724040?text=I%20want%20custom%20furniture%20design"
               target="_blank"
@@ -135,7 +129,7 @@ const OrderForm = () => {
             </div>
             <div>
               <label className="text-sm text-muted-foreground mb-1.5 block">Your Requirement</label>
-              <Textarea name="requirement" rows={4} placeholder="Describe what you're looking for..." className="bg-secondary border-border focus:border-primary" maxLength={2000} />
+              <Textarea name="requirement" rows={4} placeholder="Describe your furniture needs..." className="bg-secondary border-border focus:border-primary" maxLength={2000} />
             </div>
             <div>
               <label className="text-sm text-muted-foreground mb-1.5 block">Upload Reference Image (max 5MB)</label>

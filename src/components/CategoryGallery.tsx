@@ -39,7 +39,7 @@ const categories: Category[] = [
   {
     key: "sofas",
     label: "Sofas",
-    description: "Handcrafted luxury sofas & seating collections",
+    description: "Handcrafted custom sofas in Kolkata",
     cover: sofaVelvet,
     items: [
       { id: 1, title: "Royal Chesterfield Sofa", image: sofaChesterfield },
@@ -55,7 +55,7 @@ const categories: Category[] = [
   {
     key: "beds",
     label: "Beds",
-    description: "Premium bedroom furniture & designer beds",
+    description: "Premium designer beds in Kolkata",
     cover: bedQuiltedLuxury,
     items: [
       { id: 9, title: "Quilted Luxury Bed", image: bedQuiltedLuxury },
@@ -71,7 +71,7 @@ const categories: Category[] = [
   {
     key: "custom",
     label: "Custom Projects",
-    description: "Bespoke furniture tailored to your vision",
+    description: "Bespoke interior furniture in Kolkata",
     cover: bedGoldenWardrobe,
     items: [
       { id: 17, title: "Golden Wardrobe & Bed Suite", image: bedGoldenWardrobe },
@@ -84,7 +84,6 @@ const CategoryGallery = () => {
   const [lightbox, setLightbox] = useState<PortfolioItem | null>(null);
   const sectionRef = useRef<HTMLElement>(null);
 
-  // Re-trigger scroll animations when view changes
   useEffect(() => {
     const el = sectionRef.current;
     if (!el) return;
@@ -100,7 +99,6 @@ const CategoryGallery = () => {
       { threshold: 0.05, rootMargin: "0px 0px 0px 0px" }
     );
 
-    // Small delay to ensure DOM has updated
     const timer = setTimeout(() => {
       const children = el.querySelectorAll(".animate-scroll-fade");
       children.forEach((child) => observer.observe(child));
@@ -113,19 +111,18 @@ const CategoryGallery = () => {
   }, [activeCategory]);
 
   return (
-    <section id="portfolio" className="py-24 px-6" ref={sectionRef}>
+    <section id="portfolio" className="py-28 px-6" ref={sectionRef}>
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16 animate-scroll-fade">
           <p className="text-primary uppercase tracking-[0.3em] text-sm mb-4 font-sans">
             Portfolio
           </p>
           <h2 className="font-serif text-3xl sm:text-5xl font-bold text-foreground">
-            Our <span className="text-primary italic">Finest</span> Creations
+            Premium Sofas, Beds & <span className="text-primary italic">Interiors</span> in Kolkata
           </h2>
           <div className="w-16 h-[1px] bg-primary mx-auto mt-6" />
         </div>
 
-        {/* Category Cards View */}
         {!activeCategory && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {categories.map((cat, i) => (
@@ -138,13 +135,11 @@ const CategoryGallery = () => {
                 <div className="aspect-[3/4] sm:aspect-[4/5] relative overflow-hidden">
                   <img
                     src={cat.cover}
-                    alt={cat.label}
+                    alt={`${cat.label} — custom furniture in Kolkata by Al Ameen Furniture`}
                     className="w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110"
                   />
-                  {/* Gradient overlay */}
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
 
-                  {/* Content at bottom */}
                   <div className="absolute bottom-0 left-0 right-0 p-6 sm:p-8">
                     <p className="text-primary text-xs uppercase tracking-[0.25em] mb-2 font-sans">
                       {cat.items.length} {cat.items.length === 1 ? "piece" : "pieces"}
@@ -166,10 +161,8 @@ const CategoryGallery = () => {
           </div>
         )}
 
-        {/* Category Detail View */}
         {activeCategory && (
           <div className="animate-fade-in">
-            {/* Back button */}
             <button
               onClick={() => setActiveCategory(null)}
               className="flex items-center gap-2 text-muted-foreground hover:text-primary transition-colors duration-300 mb-8 group"
@@ -178,7 +171,6 @@ const CategoryGallery = () => {
               <span className="text-sm uppercase tracking-widest">All Collections</span>
             </button>
 
-            {/* Category header */}
             <div className="mb-10">
               <h3 className="font-serif text-3xl sm:text-4xl font-bold text-foreground">
                 {activeCategory.label}
@@ -187,7 +179,6 @@ const CategoryGallery = () => {
               <div className="w-12 h-[1px] bg-primary mt-4" />
             </div>
 
-            {/* Masonry-style grid */}
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
               {activeCategory.items.map((item, i) => (
                 <div
@@ -198,7 +189,7 @@ const CategoryGallery = () => {
                 >
                   <img
                     src={item.image}
-                    alt={item.title}
+                    alt={`${item.title} — Al Ameen Furniture Kolkata`}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     loading="lazy"
                     decoding="async"
@@ -215,7 +206,6 @@ const CategoryGallery = () => {
         )}
       </div>
 
-      {/* Lightbox */}
       <Dialog open={!!lightbox} onOpenChange={() => setLightbox(null)}>
         <DialogContent className="max-w-[95vw] sm:max-w-3xl bg-transparent border-none p-0 shadow-none [&>button]:text-white [&>button]:bg-black/60 [&>button]:rounded-full [&>button]:p-1.5 [&>button]:top-2 [&>button]:right-2">
           {lightbox && (

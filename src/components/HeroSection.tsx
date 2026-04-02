@@ -15,11 +15,11 @@ const HeroSection = () => {
 
       <div className="relative z-10 text-center px-6 max-w-4xl mx-auto">
         <h1 className="font-serif text-4xl sm:text-5xl md:text-7xl font-bold text-foreground mb-6 leading-tight tracking-tight">
-          Crafting Premium Custom{" "}
-          <span className="text-primary italic">Furniture</span> in Kolkata
+          Custom Furniture in Kolkata —{" "}
+          <span className="text-primary italic">Al Ameen Furniture</span>
         </h1>
         <p className="text-muted-foreground text-lg sm:text-xl max-w-2xl mx-auto mb-10 font-light">
-          We design and manufacture high-quality custom furniture tailored to your space, style, and comfort.
+          Premium sofas, designer beds & complete home interiors. Handcrafted to your style.
         </p>
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <a
@@ -35,7 +35,7 @@ const HeroSection = () => {
             href="#quote"
             className="inline-flex items-center justify-center px-8 py-4 rounded-full border border-primary text-primary font-semibold text-base transition-all duration-300 hover:bg-primary/10 hover:scale-105"
           >
-            Request Custom Quote
+            Get Your Custom Quote
           </a>
         </div>
       </div>
