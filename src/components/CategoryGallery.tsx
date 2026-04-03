@@ -1,5 +1,4 @@
-import { useState, useRef, useEffect } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useState, useRef, useEffect, lazy, Suspense } from "react";
 import { ArrowLeft } from "lucide-react";
 
 // Sofa imports
@@ -24,6 +23,9 @@ import bedGoldTrim from "@/assets/portfolio/bed-gold-trim.webp";
 
 // Custom Projects
 import bedGoldenWardrobe from "@/assets/portfolio/bed-golden-wardrobe.webp";
+
+const LazyDialog = lazy(() => import("@/components/ui/dialog").then(m => ({ default: m.Dialog })));
+const LazyDialogContent = lazy(() => import("@/components/ui/dialog").then(m => ({ default: m.DialogContent })));
 
 type PortfolioItem = { id: number; title: string; image: string };
 
@@ -96,7 +98,7 @@ const CategoryGallery = () => {
           }
         });
       },
-      { threshold: 0.05, rootMargin: "0px 0px 0px 0px" }
+      { threshold: 0.05 }
     );
 
     const timer = setTimeout(() => {
@@ -129,14 +131,16 @@ const CategoryGallery = () => {
               <button
                 key={cat.key}
                 onClick={() => setActiveCategory(cat)}
-                className="animate-scroll-fade group relative overflow-hidden rounded-xl border border-border/30 hover:border-primary/50 transition-all duration-700 text-left hover:-translate-y-2 gold-glow-hover"
+                className="animate-scroll-fade group relative overflow-hidden rounded-xl border border-border/30 hover:border-primary/50 transition-all duration-500 text-left hover:-translate-y-2"
                 style={{ transitionDelay: `${i * 150}ms` }}
               >
                 <div className="aspect-[3/4] sm:aspect-[4/5] relative overflow-hidden">
                   <img
                     src={cat.cover}
                     alt={`${cat.label} — custom furniture in Kolkata by Al Ameen Furniture`}
-                    className="w-full h-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110"
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading={i === 0 ? "eager" : "lazy"}
+                    decoding="async"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
 
@@ -206,24 +210,26 @@ const CategoryGallery = () => {
         )}
       </div>
 
-      <Dialog open={!!lightbox} onOpenChange={() => setLightbox(null)}>
-        <DialogContent className="max-w-[95vw] sm:max-w-3xl bg-transparent border-none p-0 shadow-none [&>button]:text-white [&>button]:bg-black/60 [&>button]:rounded-full [&>button]:p-1.5 [&>button]:top-2 [&>button]:right-2">
-          {lightbox && (
-            <div className="flex flex-col items-center">
-              <img
-                src={lightbox.image}
-                alt={lightbox.title}
-                className="w-full max-h-[80vh] object-contain rounded-lg"
-              />
-              <div className="w-full bg-card/90 backdrop-blur-sm rounded-b-lg px-4 py-3 -mt-1">
-                <p className="text-foreground font-serif text-lg font-semibold">
-                  {lightbox.title}
-                </p>
+      {lightbox && (
+        <Suspense fallback={null}>
+          <LazyDialog open={!!lightbox} onOpenChange={() => setLightbox(null)}>
+            <LazyDialogContent className="max-w-[95vw] sm:max-w-3xl bg-transparent border-none p-0 shadow-none [&>button]:text-white [&>button]:bg-black/60 [&>button]:rounded-full [&>button]:p-1.5 [&>button]:top-2 [&>button]:right-2">
+              <div className="flex flex-col items-center">
+                <img
+                  src={lightbox.image}
+                  alt={lightbox.title}
+                  className="w-full max-h-[80vh] object-contain rounded-lg"
+                />
+                <div className="w-full bg-card/90 backdrop-blur-sm rounded-b-lg px-4 py-3 -mt-1">
+                  <p className="text-foreground font-serif text-lg font-semibold">
+                    {lightbox.title}
+                  </p>
+                </div>
               </div>
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
+            </LazyDialogContent>
+          </LazyDialog>
+        </Suspense>
+      )}
     </section>
   );
 };

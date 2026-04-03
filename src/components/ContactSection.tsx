@@ -1,8 +1,10 @@
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
+import { useState } from "react";
 import { Phone, Mail, MapPin } from "lucide-react";
 
 const ContactSection = () => {
   const ref = useScrollAnimation();
+  const [showMap, setShowMap] = useState(false);
 
   return (
     <section id="contact" className="py-28 px-6" ref={ref}>
@@ -43,16 +45,27 @@ const ContactSection = () => {
           </div>
 
           <div className="animate-scroll-fade rounded-xl overflow-hidden border border-border" style={{ transitionDelay: "200ms" }}>
-            <iframe
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3686.046456648257!2d88.38840100000002!3d22.5024401!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a0277f38a4c1f75%3A0x69e50d076b20ed9a!2sAl-%20Ameen%20Furniture!5e0!3m2!1sen!2sin!4v1774712213617!5m2!1sen!2sin"
-              width="100%"
-              height="400"
-              style={{ border: 0, filter: "invert(90%) hue-rotate(180deg)" }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Al Ameen Furniture — Custom Furniture Manufacturer in Kolkata"
-            />
+            {showMap ? (
+              <iframe
+                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3686.046456648257!2d88.38840100000002!3d22.5024401!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3a0277f38a4c1f75%3A0x69e50d076b20ed9a!2sAl-%20Ameen%20Furniture!5e0!3m2!1sen!2sin!4v1774712213617!5m2!1sen!2sin"
+                width="100%"
+                height="400"
+                style={{ border: 0, filter: "invert(90%) hue-rotate(180deg)" }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Al Ameen Furniture — Custom Furniture Manufacturer in Kolkata"
+              />
+            ) : (
+              <button
+                onClick={() => setShowMap(true)}
+                className="w-full h-[400px] bg-secondary/50 flex flex-col items-center justify-center gap-4 hover:bg-secondary/70 transition-colors duration-300"
+              >
+                <MapPin className="w-10 h-10 text-primary" />
+                <span className="text-foreground font-serif text-lg font-semibold">View on Map</span>
+                <span className="text-muted-foreground text-sm">Tap to load Google Maps</span>
+              </button>
+            )}
           </div>
         </div>
       </div>

@@ -10,15 +10,15 @@ const AboutSection = () => {
         <div className="animate-scroll-fade">
           <div className="relative rounded-lg overflow-hidden aspect-[4/5]">
             <img
-              src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=800&q=80"
+              src="https://images.unsplash.com/photo-1631679706909-1844bbd07221?w=600&q=70"
               alt="Al Ameen Furniture workshop — custom furniture craftsmanship in Kolkata"
-              className="w-full h-full object-cover img-zoom"
+              className="w-full h-full object-cover"
               loading="lazy"
+              decoding="async"
             />
             <div className="absolute bottom-0 left-0 right-0 p-4 sm:p-6">
               <div className="grid grid-cols-2 gap-3">
-                <a href="https://share.google/hwZRaQpBDTIYWTj27" target="_blank" rel="noopener noreferrer" className="group relative rounded-xl border border-primary/30 bg-background/80 backdrop-blur-md p-4 overflow-hidden animate-border-glow hover:border-primary/60 transition-all duration-500 cursor-pointer no-underline">
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <a href="https://share.google/hwZRaQpBDTIYWTj27" target="_blank" rel="noopener noreferrer" className="group relative rounded-xl border border-primary/30 bg-background/80 backdrop-blur-md p-4 overflow-hidden hover:border-primary/60 transition-all duration-500 cursor-pointer no-underline">
                   <div className="relative z-10">
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
@@ -26,13 +26,12 @@ const AboutSection = () => {
                       </div>
                       <span className="text-xs text-muted-foreground uppercase tracking-wider">Customers</span>
                     </div>
-                    <p className="font-serif text-3xl font-bold text-primary animate-count">50+</p>
+                    <p className="font-serif text-3xl font-bold text-primary">50+</p>
                     <p className="text-muted-foreground text-xs mt-1">Happy & Satisfied</p>
                   </div>
                 </a>
 
-                <a href="https://share.google/hwZRaQpBDTIYWTj27" target="_blank" rel="noopener noreferrer" className="group relative rounded-xl border border-primary/30 bg-background/80 backdrop-blur-md p-4 overflow-hidden animate-border-glow hover:border-primary/60 transition-all duration-500 cursor-pointer no-underline" style={{ animationDelay: '1.5s' }}>
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                <a href="https://share.google/hwZRaQpBDTIYWTj27" target="_blank" rel="noopener noreferrer" className="group relative rounded-xl border border-primary/30 bg-background/80 backdrop-blur-md p-4 overflow-hidden hover:border-primary/60 transition-all duration-500 cursor-pointer no-underline">
                   <div className="relative z-10">
                     <div className="flex items-center gap-2 mb-2">
                       <div className="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center">
@@ -44,7 +43,7 @@ const AboutSection = () => {
                       <p className="font-serif text-3xl font-bold text-primary">5</p>
                       <div className="flex gap-0.5">
                         {[...Array(5)].map((_, i) => (
-                          <Star key={i} className="w-3 h-3 text-primary fill-primary" style={{ animationDelay: `${i * 150}ms` }} />
+                          <Star key={i} className="w-3 h-3 text-primary fill-primary" />
                         ))}
                       </div>
                     </div>

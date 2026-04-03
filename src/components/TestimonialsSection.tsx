@@ -17,12 +17,9 @@ const Stars = () => (
   </div>
 );
 
-const ReviewCard = ({ review, index }: { review: typeof reviews[0]; index: number }) => (
-  <div
-    className="flex-shrink-0 w-[80vw] sm:w-[300px] snap-center animate-slide-in"
-    style={{ animationDelay: `${index * 150}ms` }}
-  >
-    <div className="h-full bg-card border border-border/30 rounded-2xl p-5 flex flex-col gap-3 shadow-lg animate-border-glow hover:shadow-[0_0_25px_hsl(38_45%_60%/0.25)] hover:-translate-y-1 transition-all duration-500">
+const ReviewCard = ({ review }: { review: typeof reviews[0] }) => (
+  <div className="flex-shrink-0 w-[80vw] sm:w-[300px] snap-center">
+    <div className="h-full bg-card border border-border/30 rounded-2xl p-5 flex flex-col gap-3 hover:-translate-y-1 transition-transform duration-300">
       <Stars />
       <p className="text-foreground text-sm leading-relaxed">"{review.text}"</p>
       <div className="mt-auto pt-3 border-t border-border/20 flex items-center justify-between">
@@ -50,8 +47,7 @@ const TestimonialsSection = () => {
     setCanScrollLeft(el.scrollLeft > 10);
     setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 10);
     const cardWidth = el.querySelector("div")?.offsetWidth ?? 300;
-    const gap = 16;
-    const idx = Math.round(el.scrollLeft / (cardWidth + gap));
+    const idx = Math.round(el.scrollLeft / (cardWidth + 16));
     setActiveIndex(Math.min(idx, reviews.length - 1));
   };
 
@@ -63,38 +59,27 @@ const TestimonialsSection = () => {
     return () => el.removeEventListener("scroll", updateScrollState);
   }, []);
 
+  const doAutoSlide = () => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const atEnd = el.scrollLeft >= el.scrollWidth - el.clientWidth - 10;
+    if (atEnd) {
+      el.scrollTo({ left: 0, behavior: "smooth" });
+    } else {
+      const cardWidth = el.querySelector("div")?.offsetWidth ?? 300;
+      el.scrollBy({ left: cardWidth + 16, behavior: "smooth" });
+    }
+  };
+
   useEffect(() => {
-    const startAutoSlide = () => {
-      autoSlideRef.current = setInterval(() => {
-        const el = scrollRef.current;
-        if (!el) return;
-        const atEnd = el.scrollLeft >= el.scrollWidth - el.clientWidth - 10;
-        if (atEnd) {
-          el.scrollTo({ left: 0, behavior: "smooth" });
-        } else {
-          const cardWidth = el.querySelector("div")?.offsetWidth ?? 300;
-          el.scrollBy({ left: cardWidth + 16, behavior: "smooth" });
-        }
-      }, 3500);
-    };
-    startAutoSlide();
+    autoSlideRef.current = setInterval(doAutoSlide, 3500);
     return () => { if (autoSlideRef.current) clearInterval(autoSlideRef.current); };
   }, []);
 
   const pauseAutoSlide = () => { if (autoSlideRef.current) clearInterval(autoSlideRef.current); };
   const resumeAutoSlide = () => {
     pauseAutoSlide();
-    autoSlideRef.current = setInterval(() => {
-      const el = scrollRef.current;
-      if (!el) return;
-      const atEnd = el.scrollLeft >= el.scrollWidth - el.clientWidth - 10;
-      if (atEnd) {
-        el.scrollTo({ left: 0, behavior: "smooth" });
-      } else {
-        const cardWidth = el.querySelector("div")?.offsetWidth ?? 300;
-        el.scrollBy({ left: cardWidth + 16, behavior: "smooth" });
-      }
-    }, 3500);
+    autoSlideRef.current = setInterval(doAutoSlide, 3500);
   };
 
   useEffect(() => {
@@ -150,7 +135,7 @@ const TestimonialsSection = () => {
         >
           <button
             onClick={() => scroll("left")}
-            className={`hidden sm:flex absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full border border-border bg-card/80 backdrop-blur-sm transition-all duration-300 ${
+            className={`hidden sm:flex absolute -left-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full border border-border bg-card/80 transition-all duration-300 ${
               canScrollLeft ? "opacity-100 hover:border-primary hover:text-primary" : "opacity-0 pointer-events-none"
             }`}
             aria-label="Previous reviews"
@@ -159,7 +144,7 @@ const TestimonialsSection = () => {
           </button>
           <button
             onClick={() => scroll("right")}
-            className={`hidden sm:flex absolute -right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full border border-border bg-card/80 backdrop-blur-sm transition-all duration-300 ${
+            className={`hidden sm:flex absolute -right-4 top-1/2 -translate-y-1/2 z-10 w-10 h-10 items-center justify-center rounded-full border border-border bg-card/80 transition-all duration-300 ${
               canScrollRight ? "opacity-100 hover:border-primary hover:text-primary" : "opacity-0 pointer-events-none"
             }`}
             aria-label="Next reviews"
@@ -169,11 +154,11 @@ const TestimonialsSection = () => {
 
           <div
             ref={scrollRef}
-            className="flex gap-4 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-4 -mx-6 px-6"
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-4 -mx-6 px-6"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
             {reviews.map((review, i) => (
-              <ReviewCard key={i} review={review} index={i} />
+              <ReviewCard key={i} review={review} />
             ))}
           </div>
 
@@ -185,7 +170,7 @@ const TestimonialsSection = () => {
                 aria-label={`Go to review ${i + 1}`}
                 className={`rounded-full transition-all duration-300 ${
                   activeIndex === i
-                    ? "w-6 h-2.5 bg-primary shadow-[0_0_8px_hsl(var(--primary)/0.5)]"
+                    ? "w-6 h-2.5 bg-primary"
                     : "w-2.5 h-2.5 bg-muted hover:bg-primary/50"
                 }`}
               />
@@ -198,7 +183,7 @@ const TestimonialsSection = () => {
             href="https://share.google/nnaV7LoYXubIFYTg8"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-8 py-3 bg-primary text-primary-foreground font-semibold rounded-full hover:bg-primary/90 transition-all duration-300 hover:shadow-[0_0_20px_hsl(var(--primary)/0.4)]"
+            className="inline-flex items-center gap-2 px-8 py-3 bg-primary text-primary-foreground font-semibold rounded-full hover:bg-primary/90 transition-all duration-300"
           >
             View All Reviews on Google
             <ExternalLink className="w-4 h-4" />
