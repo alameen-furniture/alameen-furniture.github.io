@@ -106,14 +106,6 @@
   animation: fade-in 0.6s ease-out forwards;
 }
 
-@keyframes border-glow {
-  0%, 100% { border-color: hsl(38 45% 20% / 0.3); box-shadow: 0 0 0 hsl(38 45% 60% / 0); }
-  50% { border-color: hsl(38 45% 60% / 0.6); box-shadow: 0 0 15px hsl(38 45% 60% / 0.15); }
-}
-
-.animate-border-glow {
-  animation: border-glow 3s ease-in-out infinite;
-}
 
 @keyframes slide-in-right {
   from { opacity: 0; transform: translateX(60px); }
