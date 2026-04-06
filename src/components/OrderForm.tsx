@@ -1,20 +1,28 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
+import emailjs from "@emailjs/browser";
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024;
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 
+const EMAILJS_SERVICE_ID = "service_ds0zywx";
+const EMAILJS_TEMPLATE_ID = "template_g8tcp9s";
+const EMAILJS_PUBLIC_KEY = "B6IhTXlygHhFUndHW";
+
 const OrderForm = () => {
   const ref = useScrollAnimation();
+  const formRef = useRef<HTMLFormElement>(null);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (isSubmitting) return;
+
     const form = e.currentTarget;
     const data = new FormData(form);
     const name = (data.get("name") as string || "").trim();
@@ -41,6 +49,20 @@ const OrderForm = () => {
 
     setIsSubmitting(true);
     try {
+      // 1. Send email via EmailJS instantly
+      await emailjs.send(
+        EMAILJS_SERVICE_ID,
+        EMAILJS_TEMPLATE_ID,
+        {
+          name,
+          phone,
+          email: email || "Not provided",
+          message: requirement || "Not specified",
+        },
+        EMAILJS_PUBLIC_KEY
+      );
+
+      // 2. Save to database for admin dashboard
       let imageUrl: string | null = null;
 
       if (imageFile && imageFile.size > 0) {
@@ -69,14 +91,13 @@ const OrderForm = () => {
         }
       }
 
-      const { error } = await supabase.functions.invoke("notify-enquiry", {
+      await supabase.functions.invoke("notify-enquiry", {
         body: { name, phone, email: email || null, requirement: requirement || null, image_url: imageUrl },
       });
 
-      if (error) throw error;
-
       setSubmitted(true);
-      toast({ title: "Thank you! Your enquiry has been submitted successfully." });
+      formRef.current?.reset();
+      toast({ title: "Enquiry sent successfully!" });
     } catch (err) {
       console.error("Enquiry submission error:", err);
       toast({ title: "Something went wrong. Please try again.", variant: "destructive" });
@@ -84,7 +105,6 @@ const OrderForm = () => {
       setIsSubmitting(false);
     }
   };
-
   return (
     <section id="quote" className="py-28 px-6" ref={ref}>
       <div className="max-w-2xl mx-auto">
@@ -112,7 +132,7 @@ const OrderForm = () => {
             </a>
           </div>
         ) : (
-          <form onSubmit={handleSubmit} className="animate-scroll-fade space-y-5 border border-border rounded-xl bg-card p-8 sm:p-10">
+          <form ref={formRef} onSubmit={handleSubmit} className="animate-scroll-fade space-y-5 border border-border rounded-xl bg-card p-8 sm:p-10">
             <div className="grid sm:grid-cols-2 gap-5">
               <div>
                 <label className="text-sm text-muted-foreground mb-1.5 block">Name *</label>
