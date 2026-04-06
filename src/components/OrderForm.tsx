@@ -49,18 +49,22 @@ const OrderForm = () => {
 
     setIsSubmitting(true);
     try {
-      // 1. Send email via EmailJS instantly
-      await emailjs.send(
-        EMAILJS_SERVICE_ID,
-        EMAILJS_TEMPLATE_ID,
-        {
-          name,
-          phone,
-          email: email || "Not provided",
-          message: requirement || "Not specified",
-        },
-        EMAILJS_PUBLIC_KEY
-      );
+      // 1. Try sending email via EmailJS (non-blocking)
+      try {
+        await emailjs.send(
+          EMAILJS_SERVICE_ID,
+          EMAILJS_TEMPLATE_ID,
+          {
+            name,
+            phone,
+            email: email || "Not provided",
+            message: requirement || "Not specified",
+          },
+          EMAILJS_PUBLIC_KEY
+        );
+      } catch (emailErr) {
+        console.error("EmailJS error (non-blocking):", emailErr);
+      }
 
       // 2. Save to database for admin dashboard
       let imageUrl: string | null = null;
