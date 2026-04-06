@@ -38,7 +38,7 @@ const FloatingButtons = () => {
       {showTop && (
         <button
           onClick={scrollToTop}
-          className="fixed bottom-36 right-4 z-50 w-11 h-11 rounded-full bg-secondary border border-border flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 hover:bg-primary hover:text-primary-foreground"
+          className="fixed bottom-6 left-4 z-50 w-11 h-11 rounded-full bg-secondary border border-border flex items-center justify-center shadow-lg transition-all duration-300 hover:scale-110 hover:bg-primary hover:text-primary-foreground animate-bounce-slow"
           aria-label="Back to top"
         >
           <ArrowUp className="w-5 h-5" />
