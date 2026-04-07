@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
@@ -6,19 +6,48 @@ import { Button } from "@/components/ui/button";
 import { toast } from "@/hooks/use-toast";
 import { Lock, Mail, Eye, EyeOff } from "lucide-react";
 
+const MAX_LOGIN_ATTEMPTS = 5;
+const LOCKOUT_DURATION_MS = 5 * 60 * 1000; // 5 minutes
+
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const loginAttempts = useRef(0);
+  const lockoutUntil = useRef<number>(0);
   const navigate = useNavigate();
+
+  const isLockedOut = () => {
+    if (lockoutUntil.current && Date.now() < lockoutUntil.current) {
+      const remaining = Math.ceil((lockoutUntil.current - Date.now()) / 60000);
+      toast({ title: `Too many attempts. Try again in ${remaining} minute(s).`, variant: "destructive" });
+      return true;
+    }
+    if (lockoutUntil.current && Date.now() >= lockoutUntil.current) {
+      loginAttempts.current = 0;
+      lockoutUntil.current = 0;
+    }
+    return false;
+  };
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isLockedOut()) return;
+
     setLoading(true);
     try {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-      if (error) throw error;
+      if (error) {
+        loginAttempts.current += 1;
+        if (loginAttempts.current >= MAX_LOGIN_ATTEMPTS) {
+          lockoutUntil.current = Date.now() + LOCKOUT_DURATION_MS;
+          toast({ title: "Account locked for 5 minutes due to too many failed attempts.", variant: "destructive" });
+        } else {
+          toast({ title: "Invalid email or password.", variant: "destructive" });
+        }
+        return;
+      }
 
       // Check admin role
       const { data: roleData, error: roleError } = await supabase
@@ -34,12 +63,30 @@ const AdminLogin = () => {
         return;
       }
 
+      loginAttempts.current = 0;
       toast({ title: "Welcome back, Admin!" });
       navigate("/admin/dashboard");
     } catch (err: any) {
-      toast({ title: err.message || "Login failed", variant: "destructive" });
+      toast({ title: "Login failed. Please try again.", variant: "destructive" });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async () => {
+    if (!email) {
+      toast({ title: "Enter your email first", variant: "destructive" });
+      return;
+    }
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+      if (error) throw error;
+      toast({ title: "Password reset email sent. Check your inbox." });
+    } catch {
+      // Don't reveal whether email exists
+      toast({ title: "If this email is registered, a reset link has been sent." });
     }
   };
 
@@ -66,6 +113,7 @@ const AdminLogin = () => {
                 required
                 placeholder="admin@example.com"
                 className="pl-10 bg-secondary border-border focus:border-primary"
+                autoComplete="email"
               />
             </div>
           </div>
@@ -78,8 +126,10 @@ const AdminLogin = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={8}
                 placeholder="••••••••"
                 className="pl-10 pr-10 bg-secondary border-border focus:border-primary"
+                autoComplete="current-password"
               />
               <button
                 type="button"
@@ -94,21 +144,7 @@ const AdminLogin = () => {
           <div className="flex justify-end">
             <button
               type="button"
-              onClick={async () => {
-                if (!email) {
-                  toast({ title: "Enter your email first", variant: "destructive" });
-                  return;
-                }
-                try {
-                  const { error } = await supabase.auth.resetPasswordForEmail(email, {
-                    redirectTo: `${window.location.origin}/reset-password`,
-                  });
-                  if (error) throw error;
-                  toast({ title: "Password reset email sent. Check your inbox." });
-                } catch (err: any) {
-                  toast({ title: err.message || "Failed to send reset email", variant: "destructive" });
-                }
-              }}
+              onClick={handleForgotPassword}
               className="text-sm text-primary hover:underline"
             >
               Forgot password?

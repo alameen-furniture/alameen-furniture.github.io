@@ -35,8 +35,12 @@ const ResetPassword = () => {
       toast({ title: "Passwords do not match", variant: "destructive" });
       return;
     }
-    if (password.length < 6) {
-      toast({ title: "Password must be at least 6 characters", variant: "destructive" });
+    if (password.length < 8) {
+      toast({ title: "Password must be at least 8 characters", variant: "destructive" });
+      return;
+    }
+    if (!/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+      toast({ title: "Password must include at least one uppercase letter and one number.", variant: "destructive" });
       return;
     }
     setLoading(true);
@@ -87,8 +91,10 @@ const ResetPassword = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                minLength={8}
                 placeholder="••••••••"
                 className="pl-10 pr-10 bg-secondary border-border focus:border-primary"
+                autoComplete="new-password"
               />
               <button
                 type="button"
@@ -98,6 +104,7 @@ const ResetPassword = () => {
                 {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
               </button>
             </div>
+            <p className="text-xs text-muted-foreground mt-1">Min 8 characters, one uppercase letter, one number</p>
           </div>
           <div>
             <label className="text-sm text-muted-foreground mb-1.5 block">Confirm Password</label>
@@ -108,8 +115,10 @@ const ResetPassword = () => {
                 value={confirmPassword}
                 onChange={(e) => setConfirmPassword(e.target.value)}
                 required
+                minLength={8}
                 placeholder="••••••••"
                 className="pl-10 bg-secondary border-border focus:border-primary"
+                autoComplete="new-password"
               />
             </div>
           </div>

@@ -5,6 +5,17 @@ import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { LogOut, Trash2, Phone, Mail, Clock, Search, RefreshCw, Image } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface Enquiry {
   id: string;
@@ -16,12 +27,10 @@ interface Enquiry {
   created_at: string;
 }
 
-// Extract the storage file path from an image_url
 function extractStoragePath(imageUrl: string): string | null {
   try {
     const match = imageUrl.match(/\/storage\/v1\/object\/enquiry-images\/(.+)$/);
     if (match) return match[1];
-    // Also handle public URL format
     const publicMatch = imageUrl.match(/\/storage\/v1\/object\/public\/enquiry-images\/(.+)$/);
     if (publicMatch) return publicMatch[1];
     return null;
@@ -37,6 +46,20 @@ const AdminDashboard = () => {
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [signedUrls, setSignedUrls] = useState<Record<string, string>>({});
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_OUT" || !session) {
+        navigate("/admin");
+      }
+    });
+
+    checkAuth().then((ok) => {
+      if (ok) fetchEnquiries();
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const checkAuth = async () => {
     const { data: { session } } = await supabase.auth.getSession();
@@ -60,19 +83,15 @@ const AdminDashboard = () => {
 
   const getSignedUrl = useCallback(async (imageUrl: string): Promise<string | null> => {
     const path = extractStoragePath(imageUrl);
-    if (!path) return imageUrl; // fallback to original URL for legacy entries
+    if (!path) return imageUrl;
 
     try {
       const { data, error } = await supabase.functions.invoke("get-signed-url", {
         body: { path },
       });
-      if (error || !data?.signedUrl) {
-        console.error("Failed to get signed URL:", error);
-        return null;
-      }
+      if (error || !data?.signedUrl) return null;
       return data.signedUrl;
-    } catch (err) {
-      console.error("Signed URL error:", err);
+    } catch {
       return null;
     }
   }, []);
@@ -89,28 +108,19 @@ const AdminDashboard = () => {
       const enquiryData = (data as any) || [];
       setEnquiries(enquiryData);
 
-      // Fetch signed URLs for all enquiries with images
       const urlMap: Record<string, string> = {};
       await Promise.all(
         enquiryData
           .filter((e: Enquiry) => e.image_url)
           .map(async (e: Enquiry) => {
             const signedUrl = await getSignedUrl(e.image_url!);
-            if (signedUrl) {
-              urlMap[e.id] = signedUrl;
-            }
+            if (signedUrl) urlMap[e.id] = signedUrl;
           })
       );
       setSignedUrls(urlMap);
     }
     setLoading(false);
   };
-
-  useEffect(() => {
-    checkAuth().then((ok) => {
-      if (ok) fetchEnquiries();
-    });
-  }, []);
 
   const handleDelete = async (id: string) => {
     const { error } = await supabase.from("enquiries" as any).delete().eq("id", id);
@@ -156,7 +166,6 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Image Preview Modal */}
       {previewImage && (
         <div
           className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
@@ -170,7 +179,6 @@ const AdminDashboard = () => {
         </div>
       )}
 
-      {/* Header */}
       <header className="border-b border-border bg-card sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between">
           <div>
@@ -191,7 +199,6 @@ const AdminDashboard = () => {
       </header>
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 py-6">
-        {/* Search */}
         <div className="relative mb-6">
           <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
           <Input
@@ -240,7 +247,6 @@ const AdminDashboard = () => {
                           {enquiry.requirement}
                         </p>
                       )}
-                      {/* Reference Image */}
                       {enquiry.image_url && imageUrl && (
                         <div className="mt-3">
                           <button
@@ -277,13 +283,30 @@ const AdminDashboard = () => {
                           <path d="M12 0C5.373 0 0 5.373 0 12c0 2.625.846 5.059 2.284 7.034L.789 23.492a.5.5 0 00.611.611l4.458-1.495A11.952 11.952 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 22c-2.389 0-4.636-.85-6.438-2.324l-.45-.37-3.1 1.04 1.04-3.1-.37-.45A9.958 9.958 0 012 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10z"/>
                         </svg>
                       </a>
-                      <button
-                        onClick={() => handleDelete(enquiry.id)}
-                        className="p-2 rounded-lg bg-destructive/20 text-destructive hover:bg-destructive/30 transition-colors"
-                        title="Delete enquiry"
-                      >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
+                      <AlertDialog>
+                        <AlertDialogTrigger asChild>
+                          <button
+                            className="p-2 rounded-lg bg-destructive/20 text-destructive hover:bg-destructive/30 transition-colors"
+                            title="Delete enquiry"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                          <AlertDialogHeader>
+                            <AlertDialogTitle>Delete Enquiry</AlertDialogTitle>
+                            <AlertDialogDescription>
+                              Are you sure you want to delete the enquiry from <strong>{enquiry.name}</strong>? This action cannot be undone.
+                            </AlertDialogDescription>
+                          </AlertDialogHeader>
+                          <AlertDialogFooter>
+                            <AlertDialogCancel>Cancel</AlertDialogCancel>
+                            <AlertDialogAction onClick={() => handleDelete(enquiry.id)} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+                              Delete
+                            </AlertDialogAction>
+                          </AlertDialogFooter>
+                        </AlertDialogContent>
+                      </AlertDialog>
                     </div>
                   </div>
                 </div>
