@@ -21,13 +21,6 @@ import bedTealLuxury from "@/assets/portfolio/bed-teal-luxury.webp";
 import bedClassicGrey from "@/assets/portfolio/bed-classic-grey.webp";
 import bedGoldTrim from "@/assets/portfolio/bed-gold-trim.webp";
 
-// Custom Projects
-import bedGoldenWardrobe from "@/assets/portfolio/bed-golden-wardrobe.webp";
-import customTvUnit from "@/assets/portfolio/custom-tv-unit.webp";
-import customWardrobe from "@/assets/portfolio/custom-wardrobe.webp";
-import customDiningSet from "@/assets/portfolio/custom-dining-set.webp";
-import customStudyDesk from "@/assets/portfolio/custom-study-desk.webp";
-import customLivingRoom from "@/assets/portfolio/custom-living-room.webp";
 
 const LazyDialog = lazy(() => import("@/components/ui/dialog").then(m => ({ default: m.Dialog })));
 const LazyDialogContent = lazy(() => import("@/components/ui/dialog").then(m => ({ default: m.DialogContent })));
