@@ -9,6 +9,8 @@ import AdminLogin from "./pages/AdminLogin.tsx";
 import AdminDashboard from "./pages/AdminDashboard.tsx";
 import AdminSetup from "./pages/AdminSetup.tsx";
 import ResetPassword from "./pages/ResetPassword.tsx";
+import PrivacyPolicy from "./pages/PrivacyPolicy.tsx";
+import Terms from "./pages/Terms.tsx";
 
 const queryClient = new QueryClient();
 
@@ -20,6 +22,8 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms" element={<Terms />} />
           <Route path="/admin" element={<AdminLogin />} />
           <Route path="/admin/setup" element={<AdminSetup />} />
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
