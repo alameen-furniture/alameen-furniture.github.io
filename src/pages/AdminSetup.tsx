@@ -124,7 +124,6 @@ const AdminSetup = () => {
         </form>
       </div>
     </div>
-    </>
   );
 };
 
