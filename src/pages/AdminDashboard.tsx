@@ -165,10 +165,16 @@ const AdminDashboard = () => {
     return signedUrls[enquiry.id] || null;
   };
 
+  useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    return () => { document.head.removeChild(meta); };
+  }, []);
+
   return (
-    <>
-      <meta name="robots" content="noindex, nofollow" />
-      <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background">
       {previewImage && (
         <div
           className="fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4"
@@ -319,7 +325,6 @@ const AdminDashboard = () => {
         )}
       </main>
     </div>
-    </>
   );
 };
 
