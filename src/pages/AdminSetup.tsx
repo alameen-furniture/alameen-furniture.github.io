@@ -95,10 +95,16 @@ const AdminSetup = () => {
     );
   }
 
+  useEffect(() => {
+    const meta = document.createElement('meta');
+    meta.name = 'robots';
+    meta.content = 'noindex, nofollow';
+    document.head.appendChild(meta);
+    return () => { document.head.removeChild(meta); };
+  }, []);
+
   return (
-    <>
-      <meta name="robots" content="noindex, nofollow" />
-      <div className="min-h-screen bg-background flex items-center justify-center px-4">
+    <div className="min-h-screen bg-background flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <h1 className="font-serif text-3xl font-bold text-foreground text-center mb-2">Admin Setup</h1>
         <p className="text-muted-foreground text-center mb-8">Create your admin account (one-time setup)</p>
