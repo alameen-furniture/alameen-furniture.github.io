@@ -1,22 +1,47 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { toast } from "@/hooks/use-toast";
 import { Lock, Mail, Eye, EyeOff } from "lucide-react";
 
 const MAX_LOGIN_ATTEMPTS = 5;
-const LOCKOUT_DURATION_MS = 5 * 60 * 1000; // 5 minutes
+const LOCKOUT_DURATION_MS = 5 * 60 * 1000;
+const REMEMBER_ME_KEY = "admin_remember_me";
+const REMEMBER_DURATION_DAYS = 7;
 
 const AdminLogin = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
   const loginAttempts = useRef(0);
   const lockoutUntil = useRef<number>(0);
   const navigate = useNavigate();
+
+  // Check if user has a valid remembered session on mount
+  useEffect(() => {
+    const remembered = localStorage.getItem(REMEMBER_ME_KEY);
+    if (remembered) {
+      const { expiry } = JSON.parse(remembered);
+      if (Date.now() < expiry) {
+        // Session still valid, check if actually authenticated
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (session) {
+            navigate("/admin/dashboard");
+          } else {
+            localStorage.removeItem(REMEMBER_ME_KEY);
+          }
+        });
+      } else {
+        localStorage.removeItem(REMEMBER_ME_KEY);
+        supabase.auth.signOut();
+      }
+    }
+  }, [navigate]);
 
   const isLockedOut = () => {
     if (lockoutUntil.current && Date.now() < lockoutUntil.current) {
@@ -64,6 +89,15 @@ const AdminLogin = () => {
       }
 
       loginAttempts.current = 0;
+      
+      if (rememberMe) {
+        localStorage.setItem(REMEMBER_ME_KEY, JSON.stringify({
+          expiry: Date.now() + REMEMBER_DURATION_DAYS * 24 * 60 * 60 * 1000,
+        }));
+      } else {
+        localStorage.removeItem(REMEMBER_ME_KEY);
+      }
+      
       toast({ title: "Welcome back, Admin!" });
       navigate("/admin/dashboard");
     } catch (err: any) {
@@ -143,7 +177,17 @@ const AdminLogin = () => {
               </button>
             </div>
           </div>
-          <div className="flex justify-end">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Checkbox
+                id="remember-me"
+                checked={rememberMe}
+                onCheckedChange={(checked) => setRememberMe(checked === true)}
+              />
+              <label htmlFor="remember-me" className="text-sm text-muted-foreground cursor-pointer select-none">
+                Remember me for 7 days
+              </label>
+            </div>
             <button
               type="button"
               onClick={handleForgotPassword}

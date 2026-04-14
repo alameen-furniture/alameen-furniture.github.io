@@ -138,6 +138,7 @@ const AdminDashboard = () => {
   };
 
   const handleLogout = async () => {
+    localStorage.removeItem("admin_remember_me");
     await supabase.auth.signOut();
     navigate("/admin");
   };
