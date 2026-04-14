@@ -1,10 +1,8 @@
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
-import { useState } from "react";
 import { Phone, Mail, MapPin } from "lucide-react";
 
 const ContactSection = () => {
   const ref = useScrollAnimation();
-  const [showMap, setShowMap] = useState(false);
 
   return (
     <section id="contact" className="py-28 px-6" ref={ref}>
