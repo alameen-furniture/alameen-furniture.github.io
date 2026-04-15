@@ -1,4 +1,5 @@
 import { Phone, Mail, MapPin, Clock, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const quickLinks = [
   { label: "Portfolio", href: "#portfolio" },
@@ -136,9 +137,9 @@ const Footer = () => {
             © {new Date().getFullYear()} Al Ameen Furniture. All rights reserved.
           </p>
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
-            <a href="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</a>
+            <Link to="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link>
             <span>·</span>
-            <a href="/terms" className="hover:text-primary transition-colors">Terms & Conditions</a>
+            <Link to="/terms" className="hover:text-primary transition-colors">Terms & Conditions</Link>
           </div>
         </div>
         <div className="max-w-6xl mx-auto px-6 pb-4">
