@@ -1,9 +1,12 @@
 import { useScrollAnimation } from "@/hooks/useScrollAnimation";
 import { Star, Users, Award } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { scrollToSection } from "@/utils/scrollToSection";
 import workshopImg from "@/assets/workshop.webp";
 
 const AboutSection = () => {
   const ref = useScrollAnimation();
+  const navigate = useNavigate();
 
   return (
     <section id="about" className="py-28 px-6" ref={ref}>
@@ -67,13 +70,13 @@ const AboutSection = () => {
           <p className="text-muted-foreground leading-relaxed mb-8">
             Every piece reflects meticulous attention to detail, superior materials, and timeless craftsmanship. Your vision, our expertise.
           </p>
-          <a
-            href="#portfolio"
-            className="inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all duration-300"
+          <button
+            onClick={() => scrollToSection("portfolio", navigate)}
+            className="inline-flex items-center gap-2 text-primary font-medium hover:gap-3 transition-all duration-300 bg-transparent border-none cursor-pointer p-0"
           >
             View Our Portfolio
             <svg className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" /></svg>
-          </a>
+          </button>
         </div>
       </div>
     </section>
