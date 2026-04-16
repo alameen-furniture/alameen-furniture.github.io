@@ -140,6 +140,20 @@
   <meta name="twitter:description" content="Al Ameen Furniture — Kolkata&#39;s #1 custom sofa &amp; bed maker. Sofas from ₹4,999, beds from ₹6,999. 70+ happy customers. Same day visit. 20% OFF for online customers. Call now!">
 </head>
   <body>
+    <script>
+      // GitHub Pages SPA: decode redirected path back into history before React mounts.
+      (function () {
+        var l = window.location;
+        if (l.search[1] === "/") {
+          var decoded = l.search
+            .slice(1)
+            .split("&")
+            .map(function (s) { return s.replace(/~and~/g, "&"); })
+            .join("?");
+          window.history.replaceState(null, null, l.pathname.slice(0, -1) + decoded + l.hash);
+        }
+      })();
+    </script>
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

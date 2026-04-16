@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Al Ameen Furniture</title>
+    <script>
+      // GitHub Pages SPA redirect: encode the path and redirect to index.html
+      // so the React Router can handle it after load.
+      (function () {
+        var segmentCount = 0; // set >0 if hosted in a subpath
+        var l = window.location;
+        l.replace(
+          l.protocol +
+            "//" +
+            l.hostname +
+            (l.port ? ":" + l.port : "") +
+            l.pathname.split("/").slice(0, 1 + segmentCount).join("/") +
+            "/?/" +
+            l.pathname.slice(1).split("/").slice(segmentCount).join("/").replace(/&/g, "~and~") +
+            (l.search ? "&" + l.search.slice(1).replace(/&/g, "~and~") : "") +
+            l.hash
+        );
+      })();
+    </script>
+  </head>
+  <body></body>
+</html>
