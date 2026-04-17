@@ -17,4 +17,4 @@ Disallow: /admin/setup
 Disallow: /admin/dashboard
 Disallow: /reset-password
 
-Sitemap: https://alameenfurniture.com/sitemap.xml
+Sitemap: https://alameenfurniture.in/sitemap.xml
