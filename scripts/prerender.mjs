@@ -17,6 +17,7 @@ const SITE = "https://alameenfurniture.in";
 const pages = [
   {
     path: "privacy-policy",
+    canonicalPath: "privacy-policy/",
     title: "Privacy Policy | Al Ameen Furniture",
     description:
       "Read how Al Ameen Furniture collects, uses, and protects your personal information when you submit enquiries on our website.",
@@ -62,6 +63,7 @@ const pages = [
   },
   {
     path: "terms",
+    canonicalPath: "terms/",
     title: "Terms & Conditions | Al Ameen Furniture",
     description:
       "Terms and conditions for ordering custom furniture from Al Ameen Furniture in Kolkata — pricing, production, delivery, warranty, and cancellations.",
@@ -122,8 +124,8 @@ const fallbackStyles = `
   </style>
 `;
 
-function buildPage({ path, title, description, h1, body }) {
-  const url = `${SITE}/${path}`;
+function buildPage({ path, canonicalPath = path, title, description, h1, body }) {
+  const url = `${SITE}/${canonicalPath}`;
 
   let html = indexHtml;
 

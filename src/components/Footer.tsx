@@ -122,9 +122,9 @@ const Footer = () => {
             © {new Date().getFullYear()} Al Ameen Furniture. All rights reserved.
           </p>
           <div className="flex items-center gap-4 text-xs text-muted-foreground">
-            <Link to="/privacy-policy" className="hover:text-primary transition-colors">Privacy Policy</Link>
+            <Link to="/privacy-policy/" className="hover:text-primary transition-colors">Privacy Policy</Link>
             <span>·</span>
-            <Link to="/terms" className="hover:text-primary transition-colors">Terms & Conditions</Link>
+            <Link to="/terms/" className="hover:text-primary transition-colors">Terms & Conditions</Link>
           </div>
         </div>
         <div className="max-w-6xl mx-auto px-6 pb-4">
