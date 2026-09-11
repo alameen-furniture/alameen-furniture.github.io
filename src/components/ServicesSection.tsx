@@ -14,36 +14,42 @@ const services = [
     title: "Custom Sofas",
     description:
       "Luxury custom sofas designed according to your home, comfort and interior style.",
+    link: "https://alameenfurniture.in/alameenfurnitur/custom-sofa.html",
   },
   {
     icon: BedDouble,
     title: "Designer Beds",
     description:
       "Modern upholstered beds with premium headboards and storage options.",
+    link: "https://alameenfurniture.in/alameenfurnitur/designer-beds.html",
   },
   {
     icon: DoorOpen,
     title: "Wardrobes",
     description:
       "Sliding & modular wardrobes with elegant finish and maximum storage.",
+    link: "https://alameenfurniture.in/alameenfurnitur/wardrobes.html",
   },
   {
     icon: House,
     title: "Home Interior",
     description:
       "Complete interior solutions including TV units, kitchens and furniture.",
+    link: "https://alameenfurniture.in/alameenfurnitur/home-interior.html",
   },
   {
     icon: Building2,
     title: "Office Furniture",
     description:
       "Premium office tables, chairs and storage cabinets built for productivity.",
+    link: "https://alameenfurniture.in/alameenfurnitur/office-furniture.html",
   },
   {
     icon: Wrench,
     title: "Furniture Repair",
     description:
       "Sofa repairing, polishing and restoration by experienced craftsmen.",
+    link: "https://alameenfurniture.in/alameenfurnitur/furniture-repair.html",
   },
 ];
 
@@ -51,6 +57,7 @@ const ServicesSection = () => {
   return (
     <section className="bg-[#0b0b0b] py-20 md:py-24">
       <div className="container mx-auto px-5 md:px-8">
+
         {/* Heading */}
         <div className="mx-auto mb-12 max-w-3xl text-center">
           <span className="mb-4 block text-[11px] font-semibold uppercase tracking-[5px] text-[#dca94a]">
@@ -58,7 +65,10 @@ const ServicesSection = () => {
           </span>
 
           <h2 className="font-serif text-4xl font-semibold leading-tight text-white md:text-5xl">
-            Premium <span className="italic text-[#dca94a]">Furniture</span>{" "}
+            Premium{" "}
+            <span className="italic text-[#dca94a]">
+              Furniture
+            </span>{" "}
             Services
           </h2>
 
@@ -99,7 +109,7 @@ const ServicesSection = () => {
 
                 {/* Link */}
                 <a
-                  href="#contact"
+                  href={service.link}
                   className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[#dca94a] transition-all duration-300 group-hover:gap-2.5"
                 >
                   View More
