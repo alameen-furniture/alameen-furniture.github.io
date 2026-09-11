@@ -13,27 +13,27 @@ const quickLinks = [
 const services = [
   {
     name: "Custom Sofas & Sectionals",
-    link: "https://alameenfurniture.in/alameenfurnitur/custom-sofa.php",
+    link: "https://alameenfurniture.in/alameenfurnitur/custom-sofa.html",
   },
   {
     name: "Designer Beds & Headboards",
-    link: "https://alameenfurniture.in/alameenfurnitur/designer-beds.php",
+    link: "https://alameenfurniture.in/alameenfurnitur/designer-beds.html",
   },
   {
     name: "Wardrobes & Closets",
-    link: "https://alameenfurniture.in/alameenfurnitur/wardrobes.php",
+    link: "https://alameenfurniture.in/alameenfurnitur/wardrobes.html",
   },
   {
     name: "Complete Home Interiors",
-    link: "https://alameenfurniture.in/alameenfurnitur/home-interior.php",
+    link: "https://alameenfurniture.in/alameenfurnitur/home-interior.html",
   },
   {
     name: "Office Furniture",
-    link: "https://alameenfurniture.in/alameenfurnitur/office-furniture.php",
+    link: "https://alameenfurniture.in/alameenfurnitur/office-furniture.html",
   },
   {
     name: "Furniture Restoration",
-    link: "https://alameenfurniture.in/alameenfurnitur/furniture-repair.php",
+    link: "https://alameenfurniture.in/alameenfurnitur/furniture-repair.html",
   },
 ];
 
