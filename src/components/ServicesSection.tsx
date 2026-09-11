@@ -55,7 +55,10 @@ const services = [
 
 const ServicesSection = () => {
   return (
-    <section  id="services" className="bg-[#0b0b0b] py-20 md:py-24">
+    <section
+      id="services"
+      className="bg-[#0b0b0b] py-20 md:py-24"
+    >
       <div className="container mx-auto px-5 md:px-8">
 
         {/* Heading */}
@@ -107,16 +110,18 @@ const ServicesSection = () => {
                   {service.description}
                 </p>
 
-                {/* Link */}
+                {/* View More Link */}
                 <a
                   href={service.link}
-                  className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[#dca94a] transition-all duration-300 group-hover:gap-2.5"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-5 inline-flex items-center gap-1.5 text-sm font-semibold text-[#dca94a] transition-all duration-300 hover:gap-2.5"
                 >
                   View More
                   <ArrowRight size={17} />
                 </a>
 
-                {/* Bottom hover line */}
+                {/* Bottom Hover Line */}
                 <span className="absolute bottom-0 left-6 right-6 h-[1px] origin-left scale-x-0 bg-[#dca94a] transition-transform duration-300 group-hover:scale-x-100" />
               </div>
             );
