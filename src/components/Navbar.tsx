@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { scrollToSection } from "@/utils/scrollToSection";
 
 const navLinks = [
+  { label: "Services", section: "services" },
   { label: "Portfolio", section: "portfolio" },
   { label: "About", section: "about" },
   { label: "Contact", section: "contact" },
