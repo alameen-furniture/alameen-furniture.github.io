@@ -14,42 +14,42 @@ const services = [
     title: "Custom Sofas",
     description:
       "Luxury custom sofas designed according to your home, comfort and interior style.",
-    link: "https://alameenfurniture.in/alameenfurnitur/custom-sofa.html",
+    link: "https://alameenfurniture.in/alameenfurnitur/custom-sofa.php",
   },
   {
     icon: BedDouble,
     title: "Designer Beds",
     description:
       "Modern upholstered beds with premium headboards and storage options.",
-    link: "https://alameenfurniture.in/alameenfurnitur/designer-beds.html",
+    link: "https://alameenfurniture.in/alameenfurnitur/designer-beds.php",
   },
   {
     icon: DoorOpen,
     title: "Wardrobes",
     description:
       "Sliding & modular wardrobes with elegant finish and maximum storage.",
-    link: "https://alameenfurniture.in/alameenfurnitur/wardrobes.html",
+    link: "https://alameenfurniture.in/alameenfurnitur/wardrobes.php",
   },
   {
     icon: House,
     title: "Home Interior",
     description:
       "Complete interior solutions including TV units, kitchens and furniture.",
-    link: "https://alameenfurniture.in/alameenfurnitur/home-interior.html",
+    link: "https://alameenfurniture.in/alameenfurnitur/home-interior.php",
   },
   {
     icon: Building2,
     title: "Office Furniture",
     description:
       "Premium office tables, chairs and storage cabinets built for productivity.",
-    link: "https://alameenfurniture.in/alameenfurnitur/office-furniture.html",
+    link: "https://alameenfurniture.in/alameenfurnitur/office-furniture.php",
   },
   {
     icon: Wrench,
     title: "Furniture Repair",
     description:
       "Sofa repairing, polishing and restoration by experienced craftsmen.",
-    link: "https://alameenfurniture.in/alameenfurnitur/furniture-repair.html",
+    link: "https://alameenfurniture.in/alameenfurnitur/furniture-repair.php",
   },
 ];
 
