@@ -21,7 +21,7 @@ const ContactSection = () => {
           <div className="animate-scroll-fade space-y-8">
             {[
               { icon: Phone, label: "Phone", value: "+91 89107 24040", href: "tel:+918910724040", highlight: true },
-              { icon: Mail, label: "Email", value: "akbarkhan891071@gmail.com", href: "mailto:akbarkhan891071@gmail.com", highlight: false },
+              { icon: Mail, label: "Email", value: "akbarkhan891072@gmail.com", href: "mailto:akbarkhan891072@gmail.com", highlight: false },
               { icon: MapPin, label: "Address", value: "36, 4/3, Behari Mondal Rd, Shanti Pally, Ramlal Bazar, Haltu, Kolkata, West Bengal 700078", href: "https://maps.google.com/?q=36,+4/3,+Behari+Mondal+Rd,+Haltu,+Kolkata+700078", highlight: false },
             ].map((item) => (
               <a
