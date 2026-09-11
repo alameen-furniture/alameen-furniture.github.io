@@ -28,15 +28,6 @@ const WhyChooseUs = () => {
   const ref = useScrollAnimation();
 
   return (
-
-
-
-
-    <p>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Aut excepturi adipisci sint minima ex ducimus nam, blanditiis autem expedita facilis deserunt voluptatem distinctio debitis. Aut magnam fuga quidem. Eius, aliquid!</p>
-
-
-
-
     <section className="py-28 px-6 bg-card/50" ref={ref}>
       <div className="max-w-6xl mx-auto">
         <div className="text-center mb-16 animate-scroll-fade">
