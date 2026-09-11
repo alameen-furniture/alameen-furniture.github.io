@@ -11,12 +11,30 @@ const quickLinks = [
 ];
 
 const services = [
-  "Custom Sofas & Sectionals",
-  "Designer Beds & Headboards",
-  "Wardrobes & Closets",
-  "Complete Home Interiors",
-  "Office Furniture",
-  "Furniture Restoration",
+  {
+    name: "Custom Sofas & Sectionals",
+    link: "https://alameenfurniture.in/alameenfurnitur/custom-sofa.php",
+  },
+  {
+    name: "Designer Beds & Headboards",
+    link: "https://alameenfurniture.in/alameenfurnitur/designer-beds.php",
+  },
+  {
+    name: "Wardrobes & Closets",
+    link: "https://alameenfurniture.in/alameenfurnitur/wardrobes.php",
+  },
+  {
+    name: "Complete Home Interiors",
+    link: "https://alameenfurniture.in/alameenfurnitur/home-interior.php",
+  },
+  {
+    name: "Office Furniture",
+    link: "https://alameenfurniture.in/alameenfurnitur/office-furniture.php",
+  },
+  {
+    name: "Furniture Restoration",
+    link: "https://alameenfurniture.in/alameenfurnitur/furniture-repair.php",
+  },
 ];
 
 const Footer = () => {
@@ -121,10 +139,18 @@ const Footer = () => {
             <h4 className="font-serif text-base font-semibold text-foreground mb-5">
               Our Services
             </h4>
+
             <ul className="space-y-3">
               {services.map((s) => (
-                <li key={s} className="text-sm text-muted-foreground">
-                  {s}
+                <li key={s.name}>
+                  <a
+                    href={s.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-sm text-muted-foreground transition-colors duration-300 hover:text-[#dca94a]"
+                  >
+                    {s.name}
+                  </a>
                 </li>
               ))}
             </ul>
@@ -151,7 +177,7 @@ const Footer = () => {
                   className="flex items-start gap-3 text-sm text-muted-foreground hover:text-primary transition-colors group"
                 >
                   <Mail className="w-4 h-4 mt-0.5 text-primary/70 group-hover:text-primary transition-colors" />
-                  <span>akbarkhan891071@gmail.com</span>
+                  <span>akbarkhan891072@gmail.com</span>
                 </a>
               </li>
               <li className="flex items-start gap-3 text-sm text-muted-foreground">
@@ -176,7 +202,12 @@ const Footer = () => {
           <p className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} Al Ameen Furniture. All rights
             reserved. Designed and Developed By:{" "}
-            <a href="https://digitalmarketingking.in/" target="_blank"  rel="noopener noreferrer" className="font-medium text-[#dca94a] transition-colors hover:text-white" >
+            <a
+              href="https://digitalmarketingking.in/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-medium text-[#dca94a] transition-colors hover:text-white"
+            >
               Digital Marketing King
             </a>
           </p>
